@@ -1,0 +1,3 @@
+import { RegisterCreateCreditCardAndUpdatePhoneMutationResponse } from "__generated__/RegisterCreateCreditCardAndUpdatePhoneMutation.graphql";
+export declare const createCreditCardAndUpdatePhoneSuccessful: RegisterCreateCreditCardAndUpdatePhoneMutationResponse;
+export declare const createCreditCardAndUpdatePhoneFailed: RegisterCreateCreditCardAndUpdatePhoneMutationResponse;

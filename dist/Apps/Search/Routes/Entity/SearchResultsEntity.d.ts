@@ -1,0 +1,29 @@
+import { SearchResultsEntity_viewer } from "__generated__/SearchResultsEntity_viewer.graphql";
+import { LoadingAreaState } from "Components/v2/LoadingArea";
+import { Location } from "found";
+import React from "react";
+import { RelayRefetchProp } from "react-relay";
+export interface Props {
+    viewer: SearchResultsEntity_viewer;
+    relay: RelayRefetchProp;
+    location: Location;
+    entities: string[];
+    tab: string;
+}
+interface State extends LoadingAreaState {
+    page: number;
+}
+export declare class SearchResultsEntityRoute extends React.Component<Props, State> {
+    state: {
+        isLoading: boolean;
+        page: any;
+    };
+    constructor(props: any);
+    toggleLoading: (isLoading: any) => void;
+    loadNext: () => void;
+    loadAfter: (cursor: string, page: number) => void;
+    renderItems(): JSX.Element;
+    render(): JSX.Element;
+}
+export declare const SearchResultsEntityRouteFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<any, string | number | symbol>> & import("react-relay").ComponentRef>;
+export {};

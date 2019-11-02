@@ -1,0 +1,201 @@
+"use strict";
+
+require("core-js/modules/es6.object.define-property");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* tslint:disable */
+var node = function () {
+  var v0 = {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "id",
+    "args": null,
+    "storageKey": null
+  },
+      v1 = {
+    "kind": "ScalarField",
+    "alias": "__id",
+    "name": "id",
+    "args": null,
+    "storageKey": null
+  };
+  return {
+    "kind": "Fragment",
+    "name": "ArtworkImageBrowser_artwork",
+    "type": "Artwork",
+    "metadata": null,
+    "argumentDefinitions": [],
+    "selections": [{
+      "kind": "ScalarField",
+      "alias": "image_alt",
+      "name": "to_s",
+      "args": null,
+      "storageKey": null
+    }, {
+      "kind": "FragmentSpread",
+      "name": "ArtworkActions_artwork",
+      "args": null
+    }, {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "image",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "Image",
+      "plural": false,
+      "selections": [v0, v1]
+    }, {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "images",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "Image",
+      "plural": true,
+      "selections": [v0, {
+        "kind": "ScalarField",
+        "alias": "uri",
+        "name": "url",
+        "args": [{
+          "kind": "Literal",
+          "name": "version",
+          "value": ["large"],
+          "type": "[String]"
+        }],
+        "storageKey": "url(version:[\"large\"])"
+      }, {
+        "kind": "LinkedField",
+        "alias": "placeholder",
+        "name": "resized",
+        "storageKey": "resized(height:30,version:\"small\",width:30)",
+        "args": [{
+          "kind": "Literal",
+          "name": "height",
+          "value": 30,
+          "type": "Int"
+        }, {
+          "kind": "Literal",
+          "name": "version",
+          "value": "small",
+          "type": "[String]"
+        }, {
+          "kind": "Literal",
+          "name": "width",
+          "value": 30,
+          "type": "Int"
+        }],
+        "concreteType": "ResizedImageUrl",
+        "plural": false,
+        "selections": [{
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "url",
+          "args": null,
+          "storageKey": null
+        }]
+      }, {
+        "kind": "ScalarField",
+        "alias": "aspectRatio",
+        "name": "aspect_ratio",
+        "args": null,
+        "storageKey": null
+      }, {
+        "kind": "ScalarField",
+        "alias": null,
+        "name": "is_zoomable",
+        "args": null,
+        "storageKey": null
+      }, {
+        "kind": "ScalarField",
+        "alias": null,
+        "name": "is_default",
+        "args": null,
+        "storageKey": null
+      }, {
+        "kind": "LinkedField",
+        "alias": "deepZoom",
+        "name": "deep_zoom",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "DeepZoom",
+        "plural": false,
+        "selections": [{
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "Image",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "DeepZoomImage",
+          "plural": false,
+          "selections": [{
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "xmlns",
+            "args": null,
+            "storageKey": null
+          }, {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "Url",
+            "args": null,
+            "storageKey": null
+          }, {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "Format",
+            "args": null,
+            "storageKey": null
+          }, {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "TileSize",
+            "args": null,
+            "storageKey": null
+          }, {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "Overlap",
+            "args": null,
+            "storageKey": null
+          }, {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "Size",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "DeepZoomImageSize",
+            "plural": false,
+            "selections": [{
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "Width",
+              "args": null,
+              "storageKey": null
+            }, {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "Height",
+              "args": null,
+              "storageKey": null
+            }]
+          }]
+        }]
+      }, v1]
+    }, {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "__id",
+      "args": null,
+      "storageKey": null
+    }]
+  };
+}();
+
+node.hash = '51377fc143d191b4dfefcfc5914e1f36';
+var _default = node;
+exports.default = _default;
+//# sourceMappingURL=ArtworkImageBrowser_artwork.graphql.js.map

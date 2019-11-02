@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/Artsy/Router/server.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AACA","sourcesContent":["export * from \"./index\"\nexport { buildServerApp } from \"./buildServerApp\"\n"],"file":"server.js"}

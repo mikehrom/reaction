@@ -1,0 +1,3 @@
+import { ConfirmBidCreateBidderPositionMutationResponse } from "__generated__/ConfirmBidCreateBidderPositionMutation.graphql";
+export declare const createBidderPositionSuccessful: ConfirmBidCreateBidderPositionMutationResponse;
+export declare const createBidderPositionFailed: ConfirmBidCreateBidderPositionMutationResponse;

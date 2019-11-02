@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/Artsy/Analytics/Labels/Artist.ts"],"names":["Tabs"],"mappings":";;IAAKA,I;;WAAAA,I;AAAAA,EAAAA,I,CAAAA,I;AAAAA,EAAAA,I,CAAAA,I;GAAAA,I,KAAAA,I","sourcesContent":["enum Tabs {\n  Overview,\n  CV,\n}\n"],"file":"Artist.js"}

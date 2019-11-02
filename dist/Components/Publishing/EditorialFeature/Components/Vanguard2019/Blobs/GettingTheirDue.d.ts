@@ -1,0 +1,17 @@
+/// <reference types="react" />
+export declare const GettingTheirDue1: (props: any) => JSX.Element;
+export declare const GettingTheirDue2: (props: any) => JSX.Element;
+export declare const GettingTheirDue3: (props: any) => JSX.Element;
+export declare const GettingTheirDue4: (props: any) => JSX.Element;
+export declare const GettingTheirDue5: (props: any) => JSX.Element;
+export declare const GettingTheirDue6: (props: any) => JSX.Element;
+export declare const GettingTheirDue7: (props: any) => JSX.Element;
+export declare const GettingTheirDue8: (props: any) => JSX.Element;
+export declare const GettingTheirDue9: (props: any) => JSX.Element;
+export declare const GettingTheirDue10: (props: any) => JSX.Element;
+export declare const GettingTheirDue11: (props: any) => JSX.Element;
+export declare const GettingTheirDue12: (props: any) => JSX.Element;
+export declare const GettingTheirDue13: (props: any) => JSX.Element;
+export declare const GettingTheirDue14: (props: any) => JSX.Element;
+export declare const GettingTheirDue15: (props: any) => JSX.Element;
+export declare const GettingTheirDue: (index: number) => JSX.Element;

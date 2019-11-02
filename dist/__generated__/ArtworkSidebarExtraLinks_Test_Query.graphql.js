@@ -1,0 +1,160 @@
+"use strict";
+
+require("core-js/modules/es6.object.define-property");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* tslint:disable */
+
+/*
+query ArtworkSidebarExtraLinks_Test_Query {
+  artwork(id: "josef-albers-homage-to-the-square-85") {
+    ...ArtworkSidebarExtraLinks_artwork
+    __id
+  }
+}
+
+fragment ArtworkSidebarExtraLinks_artwork on Artwork {
+  _id
+  is_in_auction
+  is_for_sale
+  is_acquireable
+  is_inquireable
+  artists {
+    is_consignable
+    __id
+  }
+  sale {
+    is_closed
+    __id
+  }
+  __id
+}
+*/
+var node = function () {
+  var v0 = [{
+    "kind": "Literal",
+    "name": "id",
+    "value": "josef-albers-homage-to-the-square-85",
+    "type": "String!"
+  }],
+      v1 = {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "__id",
+    "args": null,
+    "storageKey": null
+  };
+  return {
+    "kind": "Request",
+    "operationKind": "query",
+    "name": "ArtworkSidebarExtraLinks_Test_Query",
+    "id": null,
+    "text": "query ArtworkSidebarExtraLinks_Test_Query {\n  artwork(id: \"josef-albers-homage-to-the-square-85\") {\n    ...ArtworkSidebarExtraLinks_artwork\n    __id\n  }\n}\n\nfragment ArtworkSidebarExtraLinks_artwork on Artwork {\n  _id\n  is_in_auction\n  is_for_sale\n  is_acquireable\n  is_inquireable\n  artists {\n    is_consignable\n    __id\n  }\n  sale {\n    is_closed\n    __id\n  }\n  __id\n}\n",
+    "metadata": {},
+    "fragment": {
+      "kind": "Fragment",
+      "name": "ArtworkSidebarExtraLinks_Test_Query",
+      "type": "Query",
+      "metadata": null,
+      "argumentDefinitions": [],
+      "selections": [{
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "artwork",
+        "storageKey": "artwork(id:\"josef-albers-homage-to-the-square-85\")",
+        "args": v0,
+        "concreteType": "Artwork",
+        "plural": false,
+        "selections": [{
+          "kind": "FragmentSpread",
+          "name": "ArtworkSidebarExtraLinks_artwork",
+          "args": null
+        }, v1]
+      }]
+    },
+    "operation": {
+      "kind": "Operation",
+      "name": "ArtworkSidebarExtraLinks_Test_Query",
+      "argumentDefinitions": [],
+      "selections": [{
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "artwork",
+        "storageKey": "artwork(id:\"josef-albers-homage-to-the-square-85\")",
+        "args": v0,
+        "concreteType": "Artwork",
+        "plural": false,
+        "selections": [{
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "_id",
+          "args": null,
+          "storageKey": null
+        }, {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "is_in_auction",
+          "args": null,
+          "storageKey": null
+        }, {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "is_for_sale",
+          "args": null,
+          "storageKey": null
+        }, {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "is_acquireable",
+          "args": null,
+          "storageKey": null
+        }, {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "is_inquireable",
+          "args": null,
+          "storageKey": null
+        }, {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "artists",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "Artist",
+          "plural": true,
+          "selections": [{
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "is_consignable",
+            "args": null,
+            "storageKey": null
+          }, v1]
+        }, {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "sale",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "Sale",
+          "plural": false,
+          "selections": [{
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "is_closed",
+            "args": null,
+            "storageKey": null
+          }, v1]
+        }, v1]
+      }]
+    }
+  };
+}();
+
+node.hash = '84e923a3d181590ea494f2f2305c70c6';
+var _default = node;
+exports.default = _default;
+//# sourceMappingURL=ArtworkSidebarExtraLinks_Test_Query.graphql.js.map

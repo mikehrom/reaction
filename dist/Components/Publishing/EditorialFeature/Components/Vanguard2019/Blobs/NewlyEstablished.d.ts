@@ -1,0 +1,17 @@
+/// <reference types="react" />
+export declare const NewlyEstablished1: (props: any) => JSX.Element;
+export declare const NewlyEstablished2: (props: any) => JSX.Element;
+export declare const NewlyEstablished3: (props: any) => JSX.Element;
+export declare const NewlyEstablished4: (props: any) => JSX.Element;
+export declare const NewlyEstablished5: (props: any) => JSX.Element;
+export declare const NewlyEstablished6: (props: any) => JSX.Element;
+export declare const NewlyEstablished7: (props: any) => JSX.Element;
+export declare const NewlyEstablished8: (props: any) => JSX.Element;
+export declare const NewlyEstablished9: (props: any) => JSX.Element;
+export declare const NewlyEstablished10: (props: any) => JSX.Element;
+export declare const NewlyEstablished11: (props: any) => JSX.Element;
+export declare const NewlyEstablished12: (props: any) => JSX.Element;
+export declare const NewlyEstablished13: (props: any) => JSX.Element;
+export declare const NewlyEstablished14: (props: any) => JSX.Element;
+export declare const NewlyEstablished15: (props: any) => JSX.Element;
+export declare const NewlyEstablished: (index: number) => JSX.Element;
