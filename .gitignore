@@ -9,8 +9,6 @@
 *.tgz
 assets/reaction-force.js
 public/assets/fonts
-dist
-dist
 node_modules
 npm-debug.log
 out*
