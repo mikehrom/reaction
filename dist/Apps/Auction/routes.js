@@ -60,7 +60,7 @@ var routes = [{
   query: function query() {
     var node = require("../../__generated__/routes_ConfirmBidQuery.graphql");
 
-    if (node.hash && node.hash !== "9ac6ed30e7106064e70531ffba6f4563") {
+    if (node.hash && node.hash !== "d98d9bac49c62c2b73eec0cba15eb1c7") {
       console.error("The definition of 'routes_ConfirmBidQuery' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
     }
 

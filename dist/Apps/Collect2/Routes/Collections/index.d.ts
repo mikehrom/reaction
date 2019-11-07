@@ -8,5 +8,5 @@ interface CollectionsAppProps {
 export declare class CollectionsApp extends Component<CollectionsAppProps> {
     render(): JSX.Element;
 }
-export declare const CollectionsAppFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<CollectionsAppProps, "categories" | "router">> & import("react-relay").ComponentRef>;
+export declare const CollectionsAppFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<CollectionsAppProps, "router" | "categories">> & import("react-relay").ComponentRef>;
 export {};

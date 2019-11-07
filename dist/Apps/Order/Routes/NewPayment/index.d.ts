@@ -38,5 +38,5 @@ export declare class NewPaymentRoute extends Component<NewPaymentProps, NewPayme
     artistId(): string;
     routeToArtistPage(): void;
 }
-export declare const NewPaymentFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<Pick<Pick<NewPaymentProps, "relay" | "order" | "me" | "stripe" | "router" | "isCommittingMutation" | "commitMutation" | "route">, "relay" | "order" | "me" | "stripe" | "router" | "route">, "order" | "me" | "stripe" | "router" | "route">> & import("react-relay").ComponentRef>;
+export declare const NewPaymentFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<Pick<Pick<NewPaymentProps, "relay" | "order" | "router" | "me" | "stripe" | "isCommittingMutation" | "commitMutation" | "route">, "relay" | "order" | "router" | "me" | "stripe" | "route">, "order" | "router" | "me" | "stripe" | "route">> & import("react-relay").ComponentRef>;
 export {};

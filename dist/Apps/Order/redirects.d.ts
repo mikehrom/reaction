@@ -4,6 +4,6 @@ import { redirects_order } from "__generated__/redirects_order.graphql";
 interface OrderQuery {
     order: redirects_order;
 }
-export declare const confirmRouteExit: (newLocation: Location, oldLocation: Location, router: Router) => string;
+export declare const confirmRouteExit: (newLocation: Location<any>, oldLocation: Location<any>, router: Router) => string;
 export declare const redirects: RedirectRecord<OrderQuery>;
 export {};

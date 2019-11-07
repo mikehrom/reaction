@@ -38,6 +38,7 @@ query ConfirmBidValidTestQuery {
     __id
   }
   me {
+    ...BidForm_me
     id
     has_qualified_credit_cards
     __id
@@ -74,6 +75,18 @@ fragment BidForm_saleArtwork on SaleArtwork {
     cents
     display
   }
+  sale {
+    registrationStatus {
+      qualifiedForBidding: qualified_for_bidding
+      __id
+    }
+    __id
+  }
+  __id
+}
+
+fragment BidForm_me on Me {
+  hasQualifiedCreditCards: has_qualified_credit_cards
   __id
 }
 */
@@ -107,77 +120,53 @@ var node = function () {
       v4 = {
     "kind": "ScalarField",
     "alias": null,
-    "name": "__id",
+    "name": "qualified_for_bidding",
     "args": null,
     "storageKey": null
   },
       v5 = {
-    "kind": "LinkedField",
+    "kind": "ScalarField",
     "alias": null,
-    "name": "sale",
-    "storageKey": null,
+    "name": "__id",
     "args": null,
-    "concreteType": "Sale",
-    "plural": false,
-    "selections": [{
-      "kind": "LinkedField",
-      "alias": null,
-      "name": "registrationStatus",
-      "storageKey": null,
-      "args": null,
-      "concreteType": "Bidder",
-      "plural": false,
-      "selections": [v2, {
-        "kind": "ScalarField",
-        "alias": null,
-        "name": "qualified_for_bidding",
-        "args": null,
-        "storageKey": null
-      }, v4]
-    }, v1, v2, {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "name",
-      "args": null,
-      "storageKey": null
-    }, {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "is_closed",
-      "args": null,
-      "storageKey": null
-    }, {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "is_registration_closed",
-      "args": null,
-      "storageKey": null
-    }, v4]
+    "storageKey": null
   },
       v6 = {
-    "kind": "LinkedField",
+    "kind": "ScalarField",
     "alias": null,
-    "name": "me",
-    "storageKey": null,
+    "name": "name",
     "args": null,
-    "concreteType": "Me",
-    "plural": false,
-    "selections": [v2, {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "has_qualified_credit_cards",
-      "args": null,
-      "storageKey": null
-    }, v4]
+    "storageKey": null
   },
       v7 = {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "is_closed",
+    "args": null,
+    "storageKey": null
+  },
+      v8 = {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "is_registration_closed",
+    "args": null,
+    "storageKey": null
+  },
+      v9 = {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "has_qualified_credit_cards",
+    "args": null,
+    "storageKey": null
+  },
+      v10 = {
     "kind": "ScalarField",
     "alias": null,
     "name": "cents",
     "args": null,
     "storageKey": null
   },
-      v8 = {
+      v11 = {
     "kind": "ScalarField",
     "alias": null,
     "name": "display",
@@ -189,7 +178,7 @@ var node = function () {
     "operationKind": "query",
     "name": "ConfirmBidValidTestQuery",
     "id": null,
-    "text": "query ConfirmBidValidTestQuery {\n  artwork(id: \"artwork-id\") {\n    ...LotInfo_artwork\n    _id\n    id\n    saleArtwork: sale_artwork(sale_id: \"example-auction-id\") {\n      ...LotInfo_saleArtwork\n      ...BidForm_saleArtwork\n      _id\n      id\n      sale {\n        registrationStatus {\n          id\n          qualified_for_bidding\n          __id\n        }\n        _id\n        id\n        name\n        is_closed\n        is_registration_closed\n        __id\n      }\n      __id\n    }\n    __id\n  }\n  me {\n    id\n    has_qualified_credit_cards\n    __id\n  }\n}\n\nfragment LotInfo_artwork on Artwork {\n  _id\n  date\n  title\n  imageUrl\n  artistNames: artist_names\n  __id\n}\n\nfragment LotInfo_saleArtwork on SaleArtwork {\n  counts {\n    bidderPositions: bidder_positions\n  }\n  lotLabel: lot_label\n  minimumNextBid: minimum_next_bid {\n    amount\n    cents\n    display\n  }\n  __id\n}\n\nfragment BidForm_saleArtwork on SaleArtwork {\n  minimumNextBid: minimum_next_bid {\n    cents\n  }\n  increments(useMyMaxBid: true) {\n    cents\n    display\n  }\n  __id\n}\n",
+    "text": "query ConfirmBidValidTestQuery {\n  artwork(id: \"artwork-id\") {\n    ...LotInfo_artwork\n    _id\n    id\n    saleArtwork: sale_artwork(sale_id: \"example-auction-id\") {\n      ...LotInfo_saleArtwork\n      ...BidForm_saleArtwork\n      _id\n      id\n      sale {\n        registrationStatus {\n          id\n          qualified_for_bidding\n          __id\n        }\n        _id\n        id\n        name\n        is_closed\n        is_registration_closed\n        __id\n      }\n      __id\n    }\n    __id\n  }\n  me {\n    ...BidForm_me\n    id\n    has_qualified_credit_cards\n    __id\n  }\n}\n\nfragment LotInfo_artwork on Artwork {\n  _id\n  date\n  title\n  imageUrl\n  artistNames: artist_names\n  __id\n}\n\nfragment LotInfo_saleArtwork on SaleArtwork {\n  counts {\n    bidderPositions: bidder_positions\n  }\n  lotLabel: lot_label\n  minimumNextBid: minimum_next_bid {\n    amount\n    cents\n    display\n  }\n  __id\n}\n\nfragment BidForm_saleArtwork on SaleArtwork {\n  minimumNextBid: minimum_next_bid {\n    cents\n  }\n  increments(useMyMaxBid: true) {\n    cents\n    display\n  }\n  sale {\n    registrationStatus {\n      qualifiedForBidding: qualified_for_bidding\n      __id\n    }\n    __id\n  }\n  __id\n}\n\nfragment BidForm_me on Me {\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  __id\n}\n",
     "metadata": {},
     "fragment": {
       "kind": "Fragment",
@@ -225,9 +214,40 @@ var node = function () {
             "kind": "FragmentSpread",
             "name": "BidForm_saleArtwork",
             "args": null
-          }, v1, v2, v5, v4]
-        }, v4]
-      }, v6]
+          }, v1, v2, {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "sale",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "Sale",
+            "plural": false,
+            "selections": [{
+              "kind": "LinkedField",
+              "alias": null,
+              "name": "registrationStatus",
+              "storageKey": null,
+              "args": null,
+              "concreteType": "Bidder",
+              "plural": false,
+              "selections": [v2, v4, v5]
+            }, v1, v2, v6, v7, v8, v5]
+          }, v5]
+        }, v5]
+      }, {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "me",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "Me",
+        "plural": false,
+        "selections": [{
+          "kind": "FragmentSpread",
+          "name": "BidForm_me",
+          "args": null
+        }, v2, v9, v5]
+      }]
     },
     "operation": {
       "kind": "Operation",
@@ -265,7 +285,7 @@ var node = function () {
           "name": "artist_names",
           "args": null,
           "storageKey": null
-        }, v4, v2, {
+        }, v5, v2, {
           "kind": "LinkedField",
           "alias": "saleArtwork",
           "name": "sale_artwork",
@@ -308,8 +328,8 @@ var node = function () {
               "name": "amount",
               "args": null,
               "storageKey": null
-            }, v7, v8]
-          }, v4, {
+            }, v10, v11]
+          }, v5, {
             "kind": "LinkedField",
             "alias": null,
             "name": "increments",
@@ -322,15 +342,54 @@ var node = function () {
             }],
             "concreteType": "BidIncrementsFormatted",
             "plural": true,
-            "selections": [v7, v8]
-          }, v1, v2, v5]
+            "selections": [v10, v11]
+          }, {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "sale",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "Sale",
+            "plural": false,
+            "selections": [{
+              "kind": "LinkedField",
+              "alias": null,
+              "name": "registrationStatus",
+              "storageKey": null,
+              "args": null,
+              "concreteType": "Bidder",
+              "plural": false,
+              "selections": [{
+                "kind": "ScalarField",
+                "alias": "qualifiedForBidding",
+                "name": "qualified_for_bidding",
+                "args": null,
+                "storageKey": null
+              }, v5, v2, v4]
+            }, v5, v1, v2, v6, v7, v8]
+          }, v1, v2]
         }]
-      }, v6]
+      }, {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "me",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "Me",
+        "plural": false,
+        "selections": [{
+          "kind": "ScalarField",
+          "alias": "hasQualifiedCreditCards",
+          "name": "has_qualified_credit_cards",
+          "args": null,
+          "storageKey": null
+        }, v5, v2, v9]
+      }]
     }
   };
 }();
 
-node.hash = '8f25a025f95a317c927ae659c6d05b0e';
+node.hash = 'ad6e68f098a2b2396f392475bbf96e5e';
 var _default = node;
 exports.default = _default;
 //# sourceMappingURL=ConfirmBidValidTestQuery.graphql.js.map

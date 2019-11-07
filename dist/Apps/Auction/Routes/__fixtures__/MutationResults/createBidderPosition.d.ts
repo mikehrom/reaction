@@ -1,3 +1,6 @@
+import { BidderPositionQueryResponse } from "__generated__/BidderPositionQuery.graphql";
 import { ConfirmBidCreateBidderPositionMutationResponse } from "__generated__/ConfirmBidCreateBidderPositionMutation.graphql";
 export declare const createBidderPositionSuccessful: ConfirmBidCreateBidderPositionMutationResponse;
 export declare const createBidderPositionFailed: ConfirmBidCreateBidderPositionMutationResponse;
+export declare const confirmBidBidderPositionQueryWithWinning: BidderPositionQueryResponse;
+export declare const confirmBidBidderPositionQueryWithPending: BidderPositionQueryResponse;

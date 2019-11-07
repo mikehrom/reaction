@@ -15,6 +15,13 @@ var node = function () {
     "name": "cents",
     "args": null,
     "storageKey": null
+  },
+      v1 = {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "__id",
+    "args": null,
+    "storageKey": null
   };
   return {
     "kind": "Fragment",
@@ -52,16 +59,34 @@ var node = function () {
         "storageKey": null
       }]
     }, {
-      "kind": "ScalarField",
+      "kind": "LinkedField",
       "alias": null,
-      "name": "__id",
+      "name": "sale",
+      "storageKey": null,
       "args": null,
-      "storageKey": null
-    }]
+      "concreteType": "Sale",
+      "plural": false,
+      "selections": [{
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "registrationStatus",
+        "storageKey": null,
+        "args": null,
+        "concreteType": "Bidder",
+        "plural": false,
+        "selections": [{
+          "kind": "ScalarField",
+          "alias": "qualifiedForBidding",
+          "name": "qualified_for_bidding",
+          "args": null,
+          "storageKey": null
+        }, v1]
+      }, v1]
+    }, v1]
   };
 }();
 
-node.hash = 'f63146f06b2eeaabe48250b3d9b72cac';
+node.hash = '2b29986a93e0cc4abb6c031f75b05cd1';
 var _default = node;
 exports.default = _default;
 //# sourceMappingURL=BidForm_saleArtwork.graphql.js.map

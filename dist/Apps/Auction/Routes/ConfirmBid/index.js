@@ -11,8 +11,6 @@ require("core-js/modules/es6.regexp.search");
 
 require("core-js/modules/es6.number.constructor");
 
-require("core-js/modules/es7.promise.finally");
-
 require("core-js/modules/es6.array.map");
 
 require("core-js/modules/es6.array.is-array");
@@ -51,6 +49,8 @@ var _get = require("../../../../Utils/get");
 
 var _logger = _interopRequireDefault(require("../../../../Utils/logger"));
 
+var _BidderPositionQuery = require("./BidderPositionQuery");
+
 var _graphql;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -62,9 +62,13 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var logger = (0, _logger.default)("Apps/Auction/Routes/ConfirmBid");
+var MAX_POLL_ATTEMPTS = 20;
 
 var ConfirmBidRoute = function ConfirmBidRoute(props) {
-  var artwork = props.artwork;
+  var pollCount = 0;
+  var artwork = props.artwork,
+      me = props.me,
+      relay = props.relay;
   var saleArtwork = artwork.saleArtwork;
   var sale = saleArtwork.sale;
 
@@ -82,7 +86,7 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                (0, _reactRelay.commitMutation)(props.relay.environment, {
+                (0, _reactRelay.commitMutation)(relay.environment, {
                   onCompleted: function onCompleted(data) {
                     resolve(data);
                   },
@@ -164,19 +168,78 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
 
   function handleSubmit(values, actions) {
     var bidderId = sale.registrationStatus.id;
-    createBidderPosition(Number(values.selectedBid)).then(function (data) {
+    var selectedBid = Number(values.selectedBid);
+    createBidderPosition(selectedBid).then(function (data) {
       if (data.createBidderPosition.result.status !== "SUCCESS") {
         trackConfirmBidFailed(bidderId, ["ConfirmBidCreateBidderPositionMutation failed"]);
       } else {
-        var positionId = data.createBidderPosition.result.position.id;
-        trackConfirmBidSuccess(positionId, bidderId, values.selectedBid);
-        window.location.assign("".concat(_sharify.data.APP_URL, "/auction/").concat(sale.id, "/artwork/").concat(artwork.id));
+        verifyBidderPosition({
+          data: data,
+          bidderId: bidderId,
+          selectedBid: selectedBid
+        });
       }
     }).catch(function (error) {
       handleMutationError(actions, error, bidderId);
-    }).finally(function () {
       actions.setSubmitting(false);
     });
+  }
+
+  function verifyBidderPosition(_ref2) {
+    var data = _ref2.data,
+        bidderId = _ref2.bidderId,
+        selectedBid = _ref2.selectedBid;
+    var result = data.createBidderPosition.result;
+    var position = result.position;
+
+    if (result.status === "SUCCESS") {
+      (0, _BidderPositionQuery.bidderPositionQuery)(relay.environment, {
+        bidderPositionID: position.id
+      }).then(function (response) {
+        return checkBidderPosition({
+          data: response,
+          bidderId: bidderId,
+          selectedBid: selectedBid
+        });
+      }).catch(function (error) {
+        return console.error(error);
+      }); // TODO: Implement error handling. story: AUCT-713
+    } else {
+      // TODO: Implement error handling. story: AUCT-713
+      console.error("Bid result was not SUCCESS:", data);
+    }
+  }
+
+  function checkBidderPosition(_ref3) {
+    var data = _ref3.data,
+        bidderId = _ref3.bidderId,
+        selectedBid = _ref3.selectedBid;
+    var bidderPosition = data.me.bidderPosition;
+
+    if (bidderPosition.status === "PENDING" && pollCount < MAX_POLL_ATTEMPTS) {
+      // initiating new request here (vs setInterval) to make sure we wait for
+      // the previous call to return before making a new one
+      setTimeout(function () {
+        return (0, _BidderPositionQuery.bidderPositionQuery)(relay.environment, {
+          bidderPositionID: bidderPosition.position.id
+        }).then(function (response) {
+          return checkBidderPosition({
+            data: response,
+            bidderId: bidderId,
+            selectedBid: selectedBid
+          });
+        }).catch(function (error) {
+          return console.error(error);
+        });
+      }, // TODO: Implement error handling. story: AUCT-713
+      1000);
+      pollCount += 1;
+    } else if (bidderPosition.status === "WINNING") {
+      var positionId = data.me.bidderPosition.position.id;
+      trackConfirmBidSuccess(positionId, bidderId, selectedBid);
+      window.location.assign("".concat(_sharify.data.APP_URL, "/artwork/").concat(artwork.id));
+    } else {// TODO: Implement error handling. story: AUCT-713
+    }
   }
 
   return _react.default.createElement(_AppContainer.AppContainer, null, _react.default.createElement(_reactHead.Title, null, "Confirm Bid | Artsy"), _react.default.createElement(_palette.Box, {
@@ -187,16 +250,15 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
     mb: [1, 100]
   }, _react.default.createElement(_palette.Serif, {
     size: "8"
-  }, "Confirm your bid"), _react.default.createElement(_palette.Serif, {
-    size: "8"
-  }, "This is a release of reaction off of `auct-pt-master`."), _react.default.createElement(_palette.Separator, null), _react.default.createElement(_LotInfo.LotInfoFragmentContainer, {
+  }, "Confirm your bid"), _react.default.createElement(_palette.Separator, null), _react.default.createElement(_LotInfo.LotInfoFragmentContainer, {
     artwork: artwork,
     saleArtwork: artwork.saleArtwork
   }), _react.default.createElement(_palette.Separator, null), _react.default.createElement(_BidForm.BidFormFragmentContainer, {
     initialSelectedBid: getInitialSelectedBid(props.location),
     showPricingTransparency: false,
     saleArtwork: saleArtwork,
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    me: me
   })));
 };
 

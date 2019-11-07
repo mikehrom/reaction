@@ -9,6 +9,11 @@ export declare type BidForm_saleArtwork = {
         readonly cents: number | null;
         readonly display: string | null;
     }) | null> | null;
+    readonly sale: ({
+        readonly registrationStatus: ({
+            readonly qualifiedForBidding: boolean | null;
+        }) | null;
+    }) | null;
     readonly " $refType": BidForm_saleArtwork$ref;
 };
 declare const node: ConcreteFragment;

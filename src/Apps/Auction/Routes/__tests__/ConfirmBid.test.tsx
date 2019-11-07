@@ -1,3 +1,7 @@
+jest.mock("Apps/Auction/Routes/ConfirmBid/BidderPositionQuery", () => ({
+  bidderPositionQuery: jest.fn(),
+}))
+
 import deepMerge from "deepmerge"
 import { createTestEnv } from "DevTools/createTestEnv"
 import React from "react"
@@ -5,9 +9,12 @@ import { graphql } from "react-relay"
 
 import { routes_ConfirmBidQueryResponse } from "__generated__/routes_ConfirmBidQuery.graphql"
 import { ConfirmBidQueryResponseFixture } from "Apps/Auction/__fixtures__/routes_ConfirmBidQuery"
+import { bidderPositionQuery } from "Apps/Auction/Routes/ConfirmBid/BidderPositionQuery"
 import { AnalyticsSchema } from "Artsy/Analytics"
 import { TrackingProp } from "react-tracking"
 import {
+  confirmBidBidderPositionQueryWithPending,
+  confirmBidBidderPositionQueryWithWinning,
   createBidderPositionFailed,
   createBidderPositionSuccessful,
 } from "../__fixtures__/MutationResults/createBidderPosition"
@@ -19,6 +26,7 @@ jest.unmock("react-tracking")
 jest.mock("Utils/Events", () => ({
   postEvent: jest.fn(),
 }))
+const mockBidderPositionQuery = bidderPositionQuery as jest.Mock
 const mockPostEvent = require("Utils/Events").postEvent as jest.Mock
 
 jest.mock("sharify", () => ({
@@ -71,6 +79,7 @@ const setupTestEnv = ({
           }
         }
         me {
+          ...BidForm_me
           id
           has_qualified_credit_cards
         }
@@ -93,109 +102,182 @@ describe("Routes/ConfirmBid", () => {
     jest.resetAllMocks()
   })
 
-  it("successfully places a bid and redirect to artwork page", async () => {
-    const env = setupTestEnv()
-    const page = await env.buildPage()
+  describe("for registered users", () => {
+    it("allows the user to place a bid without agreeing to terms", async done => {
+      const env = setupTestEnv()
+      const page = await env.buildPage()
 
-    env.mutations.useResultsOnce(createBidderPositionSuccessful)
+      env.mutations.useResultsOnce(createBidderPositionSuccessful)
+      mockBidderPositionQuery.mockResolvedValue(
+        confirmBidBidderPositionQueryWithPending
+      )
 
-    await page.agreeToTerms()
-    await page.submitForm()
+      await page.submitForm()
 
-    expect(env.mutations.mockFetch).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: "ConfirmBidCreateBidderPositionMutation",
-      }),
-      {
-        input: {
-          artwork_id: "artworkslug",
-          max_bid_amount_cents: 5000000,
-          sale_id: "saleslug",
-        },
-      }
-    )
-
-    expect(window.location.assign).toHaveBeenCalledWith(
-      `https://example.com/auction/${
-        ConfirmBidQueryResponseFixture.artwork.saleArtwork.sale.id
-      }/artwork/${ConfirmBidQueryResponseFixture.artwork.id}`
-    )
-  })
-
-  it("tracks a success event to Segment including Criteo info", async () => {
-    const env = setupTestEnv()
-    const page = await env.buildPage()
-    env.mutations.useResultsOnce(createBidderPositionSuccessful)
-
-    await page.agreeToTerms()
-    await page.submitForm()
-
-    expect(mockPostEvent).toBeCalledWith({
-      action_type: AnalyticsSchema.ActionType.ConfirmBidSubmitted,
-      context_page: AnalyticsSchema.PageName.AuctionConfirmBidPage,
-      auction_slug: "saleslug",
-      artwork_slug: "artworkslug",
-      bidder_id: "bidderid",
-      bidder_position_id: "positionid",
-      sale_id: "saleid",
-      user_id: "my-user-id",
-      order_id: "bidderid",
-      products: [
+      expect(env.mutations.mockFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: "ConfirmBidCreateBidderPositionMutation",
+        }),
         {
-          product_id: "artworkid",
-          quantity: 1,
-          price: 50000,
-        },
-      ],
+          input: {
+            artwork_id: "artworkslug",
+            max_bid_amount_cents: 5000000,
+            sale_id: "saleslug",
+          },
+        }
+      )
+
+      expect(mockBidderPositionQuery).toHaveBeenCalledTimes(1)
+      expect(mockBidderPositionQuery.mock.calls[0][1]).toEqual({
+        bidderPositionID: "positionid",
+      })
+
+      mockBidderPositionQuery.mockReset()
+      mockBidderPositionQuery.mockResolvedValue(
+        confirmBidBidderPositionQueryWithWinning
+      )
+
+      setTimeout(() => {
+        expect(mockBidderPositionQuery).toHaveBeenCalledTimes(1)
+        expect(mockBidderPositionQuery.mock.calls[0][1]).toEqual({
+          bidderPositionID: "pending-bidder-position-id-from-polling",
+        })
+
+        expect(window.location.assign).toHaveBeenCalledWith(
+          `https://example.com/artwork/${
+            ConfirmBidQueryResponseFixture.artwork.id
+          }`
+        )
+        done()
+      }, 1001)
     })
-    expect(mockPostEvent).toHaveBeenCalledTimes(1)
+
+    it("tracks a success event to Segment including Criteo info", async done => {
+      const env = setupTestEnv()
+      const page = await env.buildPage()
+      env.mutations.useResultsOnce(createBidderPositionSuccessful)
+      mockBidderPositionQuery.mockResolvedValue(
+        confirmBidBidderPositionQueryWithWinning
+      )
+
+      await page.submitForm()
+
+      setTimeout(() => {
+        expect(mockPostEvent).toHaveBeenCalledTimes(1)
+        expect(mockPostEvent).toHaveBeenCalledWith({
+          action_type: AnalyticsSchema.ActionType.ConfirmBidSubmitted,
+          context_page: AnalyticsSchema.PageName.AuctionConfirmBidPage,
+          auction_slug: "saleslug",
+          artwork_slug: "artworkslug",
+          bidder_id: "bidderid",
+          bidder_position_id: "winning-bidder-position-id-from-polling",
+          sale_id: "saleid",
+          user_id: "my-user-id",
+          order_id: "bidderid",
+          products: [
+            {
+              product_id: "artworkid",
+              quantity: 1,
+              price: 50000,
+            },
+          ],
+        })
+        done()
+      }, 1001)
+    })
+
+    it("send an error event to analytics if the mutation fails", async () => {
+      const env = setupTestEnv()
+      const page = await env.buildPage()
+
+      env.mutations.useResultsOnce(createBidderPositionFailed)
+
+      await page.submitForm()
+
+      expect(env.mutations.mockFetch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: "ConfirmBidCreateBidderPositionMutation",
+        }),
+        {
+          input: {
+            artwork_id: "artworkslug",
+            max_bid_amount_cents: 5000000,
+            sale_id: "saleslug",
+          },
+        }
+      )
+
+      expect(mockPostEvent).toBeCalledWith({
+        action_type: AnalyticsSchema.ActionType.ConfirmBidFailed,
+        context_page: AnalyticsSchema.PageName.AuctionConfirmBidPage,
+        error_messages: ["ConfirmBidCreateBidderPositionMutation failed"],
+        auction_slug: "saleslug",
+        artwork_slug: "artworkslug",
+        bidder_id: "bidderid",
+        sale_id: "saleid",
+        user_id: "my-user-id",
+      })
+      expect(mockPostEvent).toHaveBeenCalledTimes(1)
+      expect(window.location.assign).not.toHaveBeenCalled()
+    })
   })
 
-  it("send an error event to analytics if the mutation fails", async () => {
-    const env = setupTestEnv()
-    const page = await env.buildPage()
-
-    env.mutations.useResultsOnce(createBidderPositionFailed)
-
-    await page.agreeToTerms()
-    await page.submitForm()
-
-    expect(env.mutations.mockFetch).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: "ConfirmBidCreateBidderPositionMutation",
-      }),
+  describe("for unregistered users with a credit card on file", () => {
+    const FixtureForUnregisteredUserWithCreditCard = deepMerge(
+      ConfirmBidQueryResponseFixture,
       {
-        input: {
-          artwork_id: "artworkslug",
-          max_bid_amount_cents: 5000000,
-          sale_id: "saleslug",
+        me: {
+          has_qualified_credit_cards: true,
+        },
+        artwork: {
+          saleArtwork: {
+            sale: {
+              registrationStatus: null,
+            },
+          },
         },
       }
     )
 
-    expect(mockPostEvent).toBeCalledWith({
-      action_type: AnalyticsSchema.ActionType.ConfirmBidFailed,
-      context_page: AnalyticsSchema.PageName.AuctionConfirmBidPage,
-      error_messages: ["ConfirmBidCreateBidderPositionMutation failed"],
-      auction_slug: "saleslug",
-      artwork_slug: "artworkslug",
-      bidder_id: "bidderid",
-      sale_id: "saleid",
-      user_id: "my-user-id",
+    it("allows the user to place a bid after agreeing to terms", async () => {
+      const env = setupTestEnv()
+      const page = await env.buildPage({
+        mockData: FixtureForUnregisteredUserWithCreditCard,
+      })
+
+      // env.mutations.useResultsOnce(createBidderPositionSuccessful)
+      // mockBidderPositionQuery.mockResolvedValue(confirmBidBidderPositionQueryWithPending)
+
+      await page.agreeToTerms()
+      // await page.submitForm()
+
+      // TODO: Uncomment once https://artsyproduct.atlassian.net/browse/AUCT-716 is fixed.
+      // expect(env.mutations.mockFetch).toHaveBeenCalledWith(
+      //   expect.objectContaining({
+      //     name: "ConfirmBidCreateBidderPositionMutation",
+      //   }),
+      //   {
+      //     input: {
+      //       artwork_id: "artworkslug",
+      //       max_bid_amount_cents: 5000000,
+      //       sale_id: "saleslug",
+      //     },
+      //   }
+      // )
     })
-    expect(mockPostEvent).toHaveBeenCalledTimes(1)
-    expect(window.location.assign).not.toHaveBeenCalled()
-  })
 
-  it("requires user to agree to terms", async () => {
-    const env = setupTestEnv()
-    const page = await env.buildPage()
+    it("displays an error when user did not agree to terms but tried to submit", async () => {
+      const env = setupTestEnv()
+      const page = await env.buildPage({
+        mockData: FixtureForUnregisteredUserWithCreditCard,
+      })
 
-    await page.submitForm()
+      await page.submitForm()
 
-    expect(env.mutations.mockFetch).not.toBeCalled()
-    expect(window.location.assign).not.toHaveBeenCalled()
-    expect(page.text()).toContain("You must agree to the Conditions of Sale")
+      expect(env.mutations.mockFetch).not.toBeCalled()
+      expect(window.location.assign).not.toHaveBeenCalled()
+      expect(page.text()).toContain("You must agree to the Conditions of Sale")
+    })
   })
 
   describe("preselected bid amounts", () => {
@@ -203,59 +285,28 @@ describe("Routes/ConfirmBid", () => {
       const specialSelectedBidAmount = "7000000"
       const search = `?bid=${specialSelectedBidAmount}`
       const env = setupTestEnv({ location: { search } })
-      const page = await env.buildPage({
-        mockData: deepMerge(ConfirmBidQueryResponseFixture, {
-          artwork: {
-            saleArtwork: {
-              increments: [
-                { cents: 5000000, display: "$50,000" },
-                { cents: 6000000, display: "$60,000" },
-                { cents: 7000000, display: "$70,000" },
-              ],
-            },
-          },
-        }),
-      })
+      const page = await env.buildPage()
+
       expect(page.selectBidAmountInput.props().value).toBe(
         specialSelectedBidAmount
       )
     })
+
     it("pre-fills the bid select box with the highest increment if the value is higher than what is available", async () => {
       const specialSelectedBidAmount = "42000000"
       const search = `?bid=${specialSelectedBidAmount}`
       const env = setupTestEnv({ location: { search } })
-      const page = await env.buildPage({
-        mockData: deepMerge(ConfirmBidQueryResponseFixture, {
-          artwork: {
-            saleArtwork: {
-              increments: [
-                { cents: 5000000, display: "$50,000" },
-                { cents: 6000000, display: "$60,000" },
-                { cents: 7000000, display: "$70,000" },
-              ],
-            },
-          },
-        }),
-      })
+      const page = await env.buildPage()
+
       expect(page.selectBidAmountInput.props().value).toBe("5000000")
     })
+
     it("pre-fills the bid select box with the lowest increment if the value is lower than what is available", async () => {
       const specialSelectedBidAmount = "420000"
       const search = `?bid=${specialSelectedBidAmount}`
       const env = setupTestEnv({ location: { search } })
-      const page = await env.buildPage({
-        mockData: deepMerge(ConfirmBidQueryResponseFixture, {
-          artwork: {
-            saleArtwork: {
-              increments: [
-                { cents: 5000000, display: "$50,000" },
-                { cents: 6000000, display: "$60,000" },
-                { cents: 7000000, display: "$70,000" },
-              ],
-            },
-          },
-        }),
-      })
+      const page = await env.buildPage()
+
       expect(page.selectBidAmountInput.props().value).toBe("5000000")
     })
 
@@ -263,19 +314,8 @@ describe("Routes/ConfirmBid", () => {
       const specialSelectedBidAmount = "50 thousand and 00/100 dollars"
       const search = `?bid=${specialSelectedBidAmount}`
       const env = setupTestEnv({ location: { search } })
-      const page = await env.buildPage({
-        mockData: deepMerge(ConfirmBidQueryResponseFixture, {
-          artwork: {
-            saleArtwork: {
-              increments: [
-                { cents: 5000000, display: "$50,000" },
-                { cents: 6000000, display: "$60,000" },
-                { cents: 7000000, display: "$70,000" },
-              ],
-            },
-          },
-        }),
-      })
+      const page = await env.buildPage()
+
       expect(page.selectBidAmountInput.props().value).toBe("5000000")
     })
   })

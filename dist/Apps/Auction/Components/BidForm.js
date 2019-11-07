@@ -43,7 +43,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-var validationSchema = _yup.default.object().shape({
+var validationSchemaForRegisteredUsers = _yup.default.object().shape({
+  selectedBid: _yup.default.string().required()
+});
+
+var validationSchemaForUnregisteredUsersWithCreditCard = _yup.default.object().shape({
   selectedBid: _yup.default.string().required(),
   agreeToTerms: _yup.default.bool().oneOf([true], "You must agree to the Conditions of Sale")
 });
@@ -66,12 +70,21 @@ var getSelectedBid = function getSelectedBid(_ref) {
   return selectedIncrement.value;
 };
 
+var determineDisplayRequirements = function determineDisplayRequirements(bidder, me) {
+  var isRegistered = !!bidder;
+  return {
+    requiresCheckbox: !isRegistered,
+    requiresPaymentInformation: !(isRegistered || me.hasQualifiedCreditCards)
+  };
+};
+
 var BidForm = function BidForm(_ref2) {
-  var onSubmit = _ref2.onSubmit,
+  var initialSelectedBid = _ref2.initialSelectedBid,
+      me = _ref2.me,
+      onSubmit = _ref2.onSubmit,
       saleArtwork = _ref2.saleArtwork,
       _ref2$showPricingTran = _ref2.showPricingTransparency,
-      showPricingTransparency = _ref2$showPricingTran === void 0 ? false : _ref2$showPricingTran,
-      initialSelectedBid = _ref2.initialSelectedBid;
+      showPricingTransparency = _ref2$showPricingTran === void 0 ? false : _ref2$showPricingTran;
   var displayIncrements = (0, _dropWhile2.default)(saleArtwork.increments, function (increment) {
     return increment.cents < saleArtwork.minimumNextBid.cents;
   }).map(function (inc) {
@@ -84,6 +97,11 @@ var BidForm = function BidForm(_ref2) {
     initialSelectedBid: initialSelectedBid,
     displayIncrements: displayIncrements
   });
+
+  var _determineDisplayRequ = determineDisplayRequirements(saleArtwork.sale.registrationStatus, me),
+      requiresCheckbox = _determineDisplayRequ.requiresCheckbox;
+
+  var validationSchema = requiresCheckbox ? validationSchemaForUnregisteredUsersWithCreditCard : validationSchemaForRegisteredUsers;
   return _react.default.createElement(_palette.Box, {
     maxWidth: 550
   }, _react.default.createElement(_formik.Formik, {
@@ -121,12 +139,14 @@ var BidForm = function BidForm(_ref2) {
         mt: 1,
         color: "red100",
         size: "2"
-      }, errors.selectedBid), showPricingTransparency && _react.default.createElement(_PricingTransparency.PricingTransparency, null)), _react.default.createElement(_palette.Separator, null), _react.default.createElement(_palette.Flex, {
-        py: 3,
+      }, errors.selectedBid), showPricingTransparency && _react.default.createElement(_PricingTransparency.PricingTransparency, null)), _react.default.createElement(_palette.Flex, {
+        pb: 3,
         flexDirection: "column",
         justifyContent: "center",
         width: "100%"
-      }, _react.default.createElement(_palette.Box, {
+      }, requiresCheckbox && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_palette.Separator, {
+        mb: 3
+      }), _react.default.createElement(_palette.Box, {
         mx: "auto",
         mb: 3
       }, _react.default.createElement(_ConditionsOfSaleCheckbox.ConditionsOfSaleCheckbox, {
@@ -140,9 +160,8 @@ var BidForm = function BidForm(_ref2) {
         color: "red100",
         size: "2",
         textAlign: "center"
-      }, errors.agreeToTerms)), _react.default.createElement(_palette.Button, _extends({
+      }, errors.agreeToTerms))), _react.default.createElement(_palette.Button, _extends({
         size: "large",
-        mt: 3,
         width: "100%",
         loading: isSubmitting
       }, {
@@ -157,11 +176,20 @@ var BidFormFragmentContainer = (0, _reactRelay.createFragmentContainer)(BidForm,
   saleArtwork: function saleArtwork() {
     var node = require("../../../__generated__/BidForm_saleArtwork.graphql");
 
-    if (node.hash && node.hash !== "f63146f06b2eeaabe48250b3d9b72cac") {
+    if (node.hash && node.hash !== "2b29986a93e0cc4abb6c031f75b05cd1") {
       console.error("The definition of 'BidForm_saleArtwork' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
     }
 
     return require("../../../__generated__/BidForm_saleArtwork.graphql");
+  },
+  me: function me() {
+    var node = require("../../../__generated__/BidForm_me.graphql");
+
+    if (node.hash && node.hash !== "7f8137c88b31245f0b14d6df94c90179") {
+      console.error("The definition of 'BidForm_me' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
+    }
+
+    return require("../../../__generated__/BidForm_me.graphql");
   }
 });
 exports.BidFormFragmentContainer = BidFormFragmentContainer;

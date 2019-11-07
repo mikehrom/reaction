@@ -14,4 +14,4 @@ export interface CollectAppProps {
     };
 }
 export declare const CollectApp: (props: CollectAppProps) => JSX.Element;
-export declare const CollectAppFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<CollectAppProps, "location" | "viewer" | "marketingHubCollections" | "params" | "filterArtworks" | "COLLECTION_HUB_ENTRYPOINTS_TEST" | "router">> & import("react-relay").ComponentRef>;
+export declare const CollectAppFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<CollectAppProps, "location" | "router" | "viewer" | "marketingHubCollections" | "params" | "filterArtworks" | "COLLECTION_HUB_ENTRYPOINTS_TEST">> & import("react-relay").ComponentRef>;

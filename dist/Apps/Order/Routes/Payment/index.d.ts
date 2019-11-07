@@ -26,5 +26,5 @@ export declare class PaymentRoute extends Component<PaymentProps, PaymentState> 
     render(): JSX.Element;
     setOrderPayment(variables: PaymentRouteSetOrderPaymentMutation["variables"]): Promise<import("../../../../__generated__/PaymentRouteSetOrderPaymentMutation.graphql").PaymentRouteSetOrderPaymentMutationResponse>;
 }
-export declare const PaymentFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<Pick<Pick<PaymentProps, "order" | "me" | "stripe" | "router" | "isCommittingMutation" | "commitMutation">, "order" | "me" | "stripe" | "router">, "order" | "me" | "stripe" | "router">> & import("react-relay").ComponentRef>;
+export declare const PaymentFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<Pick<Pick<PaymentProps, "order" | "router" | "me" | "stripe" | "isCommittingMutation" | "commitMutation">, "order" | "router" | "me" | "stripe">, "order" | "router" | "me" | "stripe">> & import("react-relay").ComponentRef>;
 export {};

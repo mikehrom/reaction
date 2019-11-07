@@ -254,6 +254,9 @@ var TestEnv = function TestEnv(opts) {
       return typeof v === "function" ? v.apply(void 0, arguments) : v;
     })));
   }, {});
+  beforeEach(function () {
+    _this2.errors = [];
+  });
   afterEach(function () {
     var _errors = _this2.errors;
     _this2.errors = []; // @ts-ignore
