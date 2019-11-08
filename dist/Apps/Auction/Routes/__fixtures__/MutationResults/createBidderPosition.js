@@ -5,12 +5,19 @@ require("core-js/modules/es6.object.define-property");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.confirmBidBidderPositionQueryWithPending = exports.confirmBidBidderPositionQueryWithWinning = exports.createBidderPositionFailed = exports.createBidderPositionSuccessful = void 0;
+exports.confirmBidBidderPositionQueryWithPending = exports.confirmBidBidderPositionQueryWithWinning = exports.createBidderPositionFailed = exports.createBidderPositionSuccessfulAndBidder = exports.createBidderPositionSuccessful = void 0;
 var createBidderPositionSuccessful = {
   createBidderPosition: {
     result: {
       position: {
-        id: "positionid"
+        id: "positionid",
+        sale_artwork: {
+          sale: {
+            registrationStatus: {
+              id: "existing-bidder-id"
+            }
+          }
+        }
       },
       status: "SUCCESS",
       message_header: null,
@@ -19,6 +26,26 @@ var createBidderPositionSuccessful = {
   }
 };
 exports.createBidderPositionSuccessful = createBidderPositionSuccessful;
+var createBidderPositionSuccessfulAndBidder = {
+  createBidderPosition: {
+    result: {
+      position: {
+        id: "positionid",
+        sale_artwork: {
+          sale: {
+            registrationStatus: {
+              id: "new-bidder-id"
+            }
+          }
+        }
+      },
+      status: "SUCCESS",
+      message_header: null,
+      message_description_md: null
+    }
+  }
+};
+exports.createBidderPositionSuccessfulAndBidder = createBidderPositionSuccessfulAndBidder;
 var createBidderPositionFailed = {
   createBidderPosition: {
     result: {

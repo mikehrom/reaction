@@ -13,6 +13,13 @@ export declare type ConfirmBidCreateBidderPositionMutationResponse = {
         readonly result: ({
             readonly position: ({
                 readonly id: string;
+                readonly sale_artwork: ({
+                    readonly sale: ({
+                        readonly registrationStatus: ({
+                            readonly id: string;
+                        }) | null;
+                    }) | null;
+                }) | null;
             }) | null;
             readonly status: string;
             readonly message_header: string | null;

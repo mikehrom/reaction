@@ -96,7 +96,7 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
                   mutation: _graphql || (_graphql = function _graphql() {
                     var node = require("../../../../__generated__/ConfirmBidCreateBidderPositionMutation.graphql");
 
-                    if (node.hash && node.hash !== "6c893ea6050f8571b02181c2d660da78") {
+                    if (node.hash && node.hash !== "5302f9a91840d5cc3e0dad780fbcba5e") {
                       console.error("The definition of 'ConfirmBidCreateBidderPositionMutation' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
                     }
 
@@ -167,20 +167,21 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
   }
 
   function handleSubmit(values, actions) {
-    var bidderId = sale.registrationStatus.id;
     var selectedBid = Number(values.selectedBid);
+    var possibleExistingBidderId = sale.registrationStatus ? sale.registrationStatus.id : null;
     createBidderPosition(selectedBid).then(function (data) {
       if (data.createBidderPosition.result.status !== "SUCCESS") {
-        trackConfirmBidFailed(bidderId, ["ConfirmBidCreateBidderPositionMutation failed"]);
+        trackConfirmBidFailed(possibleExistingBidderId, ["ConfirmBidCreateBidderPositionMutation failed"]);
       } else {
+        var bidderIdFromMutation = data.createBidderPosition.result.position.sale_artwork.sale.registrationStatus.id;
         verifyBidderPosition({
           data: data,
-          bidderId: bidderId,
+          bidderId: bidderIdFromMutation,
           selectedBid: selectedBid
         });
       }
     }).catch(function (error) {
-      handleMutationError(actions, error, bidderId);
+      handleMutationError(actions, error, possibleExistingBidderId);
       actions.setSubmitting(false);
     });
   }
