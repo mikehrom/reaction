@@ -11,12 +11,6 @@ require("core-js/modules/es6.regexp.search");
 
 require("core-js/modules/es6.number.constructor");
 
-require("core-js/modules/es6.array.map");
-
-require("core-js/modules/es6.array.is-array");
-
-require("regenerator-runtime/runtime");
-
 require("core-js/modules/es6.promise");
 
 var _palette = require("@artsy/palette");
@@ -24,6 +18,8 @@ var _palette = require("@artsy/palette");
 var _BidForm = require("../../Components/BidForm");
 
 var _LotInfo = require("../../Components/LotInfo");
+
+var _BidderPositionQuery = require("./BidderPositionQuery");
 
 var _AppContainer = require("../../../Components/AppContainer");
 
@@ -49,17 +45,11 @@ var _get = require("../../../../Utils/get");
 
 var _logger = _interopRequireDefault(require("../../../../Utils/logger"));
 
-var _BidderPositionQuery = require("./BidderPositionQuery");
-
 var _graphql;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var logger = (0, _logger.default)("Apps/Auction/Routes/ConfirmBid");
 var MAX_POLL_ATTEMPTS = 20;
@@ -71,77 +61,45 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
       relay = props.relay;
   var saleArtwork = artwork.saleArtwork;
   var sale = saleArtwork.sale;
+  var environment = relay.environment;
 
   var _useTracking = (0, _useTracking2.useTracking)(),
       trackEvent = _useTracking.trackEvent;
 
   function createBidderPosition(maxBidAmountCents) {
-    return new Promise(
-    /*#__PURE__*/
-    function () {
-      var _ref = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(resolve, reject) {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                (0, _reactRelay.commitMutation)(relay.environment, {
-                  onCompleted: function onCompleted(data) {
-                    resolve(data);
-                  },
-                  onError: function onError(error) {
-                    reject(error);
-                  },
-                  mutation: _graphql || (_graphql = function _graphql() {
-                    var node = require("../../../../__generated__/ConfirmBidCreateBidderPositionMutation.graphql");
+    return new Promise(function (resolve, reject) {
+      (0, _reactRelay.commitMutation)(environment, {
+        onCompleted: function onCompleted(data) {
+          return resolve(data);
+        },
+        onError: function onError(error) {
+          return reject(error);
+        },
+        mutation: _graphql || (_graphql = function _graphql() {
+          var node = require("../../../../__generated__/ConfirmBidCreateBidderPositionMutation.graphql");
 
-                    if (node.hash && node.hash !== "5302f9a91840d5cc3e0dad780fbcba5e") {
-                      console.error("The definition of 'ConfirmBidCreateBidderPositionMutation' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
-                    }
-
-                    return require("../../../../__generated__/ConfirmBidCreateBidderPositionMutation.graphql");
-                  }),
-                  variables: {
-                    input: {
-                      sale_id: sale.id,
-                      artwork_id: artwork.id,
-                      max_bid_amount_cents: maxBidAmountCents
-                    }
-                  }
-                });
-
-              case 1:
-              case "end":
-                return _context.stop();
-            }
+          if (node.hash && node.hash !== "4717cf31f235967d3d66738c0b632bc5") {
+            console.error("The definition of 'ConfirmBidCreateBidderPositionMutation' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
           }
-        }, _callee);
-      }));
 
-      return function (_x, _x2) {
-        return _ref.apply(this, arguments);
-      };
-    }());
+          return require("../../../../__generated__/ConfirmBidCreateBidderPositionMutation.graphql");
+        }),
+        variables: {
+          input: {
+            sale_id: sale.id,
+            artwork_id: artwork.id,
+            max_bid_amount_cents: maxBidAmountCents
+          }
+        }
+      });
+    });
   }
 
-  function handleMutationError(actions, error, bidderId) {
+  function onJsError(actions, error, bidderId) {
     logger.error(error);
-    var errorMessages;
-
-    if (Array.isArray(error)) {
-      errorMessages = error.map(function (e) {
-        return e.message;
-      });
-    } else if (typeof error === "string") {
-      errorMessages = [error];
-    } else if (error.message) {
-      errorMessages = [error.message];
-    }
-
-    trackConfirmBidFailed(bidderId, errorMessages);
+    trackConfirmBidFailed(bidderId, ["JavaScript error: ".concat(error.message)]);
     actions.setSubmitting(false);
-    actions.setStatus("submissionFailed");
+    actions.setStatus("Something went wrong while processing your bid. Please make sure your internet connection is active and try again");
   }
 
   function trackConfirmBidFailed(bidderId, errors) {
@@ -168,78 +126,84 @@ var ConfirmBidRoute = function ConfirmBidRoute(props) {
 
   function handleSubmit(values, actions) {
     var selectedBid = Number(values.selectedBid);
-    var possibleExistingBidderId = sale.registrationStatus ? sale.registrationStatus.id : null;
+    var possibleExistingBidderId = sale.registrationStatus && sale.registrationStatus.id;
     createBidderPosition(selectedBid).then(function (data) {
-      if (data.createBidderPosition.result.status !== "SUCCESS") {
-        trackConfirmBidFailed(possibleExistingBidderId, ["ConfirmBidCreateBidderPositionMutation failed"]);
-      } else {
-        var bidderIdFromMutation = data.createBidderPosition.result.position.sale_artwork.sale.registrationStatus.id;
-        verifyBidderPosition({
-          data: data,
-          bidderId: bidderIdFromMutation,
-          selectedBid: selectedBid
-        });
-      }
+      return verifyBidderPosition({
+        actions: actions,
+        data: data,
+        selectedBid: selectedBid,
+        possibleExistingBidderId: possibleExistingBidderId
+      });
     }).catch(function (error) {
-      handleMutationError(actions, error, possibleExistingBidderId);
-      actions.setSubmitting(false);
+      return onJsError(actions, error, possibleExistingBidderId);
     });
   }
 
-  function verifyBidderPosition(_ref2) {
-    var data = _ref2.data,
-        bidderId = _ref2.bidderId,
-        selectedBid = _ref2.selectedBid;
+  function verifyBidderPosition(_ref) {
+    var actions = _ref.actions,
+        data = _ref.data,
+        possibleExistingBidderId = _ref.possibleExistingBidderId,
+        selectedBid = _ref.selectedBid;
     var result = data.createBidderPosition.result;
-    var position = result.position;
+    var position = result.position,
+        messageHeader = result.messageHeader;
+    var bidderId = possibleExistingBidderId || position && position.sale_artwork && position.sale_artwork.sale && position.sale_artwork.sale.registrationStatus.id;
 
     if (result.status === "SUCCESS") {
-      (0, _BidderPositionQuery.bidderPositionQuery)(relay.environment, {
+      (0, _BidderPositionQuery.bidderPositionQuery)(environment, {
         bidderPositionID: position.id
-      }).then(function (response) {
+      }).then(function (res) {
         return checkBidderPosition({
-          data: response,
+          actions: actions,
+          data: res,
           bidderId: bidderId,
           selectedBid: selectedBid
         });
       }).catch(function (error) {
-        return console.error(error);
-      }); // TODO: Implement error handling. story: AUCT-713
+        return onJsError(actions, error, bidderId);
+      });
     } else {
-      // TODO: Implement error handling. story: AUCT-713
-      console.error("Bid result was not SUCCESS:", data);
+      actions.setStatus(messageHeader);
+      actions.setSubmitting(false);
+      trackConfirmBidFailed(bidderId, [messageHeader]);
     }
   }
 
-  function checkBidderPosition(_ref3) {
-    var data = _ref3.data,
-        bidderId = _ref3.bidderId,
-        selectedBid = _ref3.selectedBid;
+  function checkBidderPosition(_ref2) {
+    var actions = _ref2.actions,
+        data = _ref2.data,
+        bidderId = _ref2.bidderId,
+        selectedBid = _ref2.selectedBid;
     var bidderPosition = data.me.bidderPosition;
+    var status = bidderPosition.status,
+        position = bidderPosition.position,
+        messageHeader = bidderPosition.messageHeader;
 
-    if (bidderPosition.status === "PENDING" && pollCount < MAX_POLL_ATTEMPTS) {
+    if (status === "PENDING" && pollCount < MAX_POLL_ATTEMPTS) {
       // initiating new request here (vs setInterval) to make sure we wait for
       // the previous call to return before making a new one
       setTimeout(function () {
-        return (0, _BidderPositionQuery.bidderPositionQuery)(relay.environment, {
-          bidderPositionID: bidderPosition.position.id
-        }).then(function (response) {
+        return (0, _BidderPositionQuery.bidderPositionQuery)(environment, {
+          bidderPositionID: position.id
+        }).then(function (res) {
           return checkBidderPosition({
-            data: response,
+            actions: actions,
+            data: res,
             bidderId: bidderId,
             selectedBid: selectedBid
           });
         }).catch(function (error) {
-          return console.error(error);
+          return onJsError(actions, error, bidderId);
         });
-      }, // TODO: Implement error handling. story: AUCT-713
-      1000);
+      }, 1000);
       pollCount += 1;
-    } else if (bidderPosition.status === "WINNING") {
-      var positionId = data.me.bidderPosition.position.id;
-      trackConfirmBidSuccess(positionId, bidderId, selectedBid);
+    } else if (status === "WINNING") {
+      trackConfirmBidSuccess(position.id, bidderId, selectedBid);
       window.location.assign("".concat(_sharify.data.APP_URL, "/artwork/").concat(artwork.id));
-    } else {// TODO: Implement error handling. story: AUCT-713
+    } else {
+      actions.setStatus(messageHeader);
+      actions.setSubmitting(false);
+      trackConfirmBidFailed(bidderId, [messageHeader]);
     }
   }
 

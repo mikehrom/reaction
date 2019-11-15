@@ -5,3 +5,4 @@ export declare const createBidderPositionSuccessfulAndBidder: ConfirmBidCreateBi
 export declare const createBidderPositionFailed: ConfirmBidCreateBidderPositionMutationResponse;
 export declare const confirmBidBidderPositionQueryWithWinning: BidderPositionQueryResponse;
 export declare const confirmBidBidderPositionQueryWithPending: BidderPositionQueryResponse;
+export declare const confirmBidBidderPositionQueryWithOutbid: BidderPositionQueryResponse;

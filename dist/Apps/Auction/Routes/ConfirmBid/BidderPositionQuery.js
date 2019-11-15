@@ -13,8 +13,11 @@ var _relayRuntime = require("relay-runtime");
 
 var _graphql;
 
+// @types/relay-runtime 1.3.5 does not have the correct signature so making our
+var fetchRelayModernQuery = _relayRuntime.fetchQuery;
+
 var bidderPositionQuery = function bidderPositionQuery(environment, variables) {
-  return (0, _relayRuntime.fetchQuery)(environment, _graphql || (_graphql = function _graphql() {
+  return fetchRelayModernQuery(environment, _graphql || (_graphql = function _graphql() {
     var node = require("../../../../__generated__/BidderPositionQuery.graphql");
 
     if (node.hash && node.hash !== "2b78470f9530768f48359c5a407ca3f4") {
@@ -22,7 +25,9 @@ var bidderPositionQuery = function bidderPositionQuery(environment, variables) {
     }
 
     return require("../../../../__generated__/BidderPositionQuery.graphql");
-  }), variables);
+  }), variables, {
+    force: true
+  });
 };
 
 exports.bidderPositionQuery = bidderPositionQuery;

@@ -9,6 +9,10 @@ interface Props {
     saleArtwork: BidForm_saleArtwork;
     showPricingTransparency?: boolean;
 }
+export interface FormValues {
+    selectedBid: string;
+    agreeToTerms: boolean;
+}
 export declare const BidForm: React.FC<Props>;
 export declare const BidFormFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<Props, "onSubmit" | "saleArtwork" | "me" | "initialSelectedBid" | "showPricingTransparency">> & import("react-relay").ComponentRef>;
 export {};

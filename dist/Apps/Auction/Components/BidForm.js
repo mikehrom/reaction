@@ -117,7 +117,8 @@ var BidForm = function BidForm(_ref2) {
           errors = _ref3.errors,
           isSubmitting = _ref3.isSubmitting,
           setFieldValue = _ref3.setFieldValue,
-          setFieldTouched = _ref3.setFieldTouched;
+          setFieldTouched = _ref3.setFieldTouched,
+          status = _ref3.status;
       return _react.default.createElement(_formik.Form, null, _react.default.createElement(_palette.Flex, {
         flexDirection: "column"
       }, _react.default.createElement(_palette.Flex, {
@@ -160,7 +161,12 @@ var BidForm = function BidForm(_ref2) {
         color: "red100",
         size: "2",
         textAlign: "center"
-      }, errors.agreeToTerms))), _react.default.createElement(_palette.Button, _extends({
+      }, errors.agreeToTerms))), status && _react.default.createElement(_palette.Sans, {
+        textAlign: "center",
+        size: "3",
+        color: "red100",
+        mb: 2
+      }, status, "."), _react.default.createElement(_palette.Button, _extends({
         size: "large",
         width: "100%",
         loading: isSubmitting

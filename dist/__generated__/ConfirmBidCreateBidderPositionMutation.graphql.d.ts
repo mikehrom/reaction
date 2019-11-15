@@ -22,8 +22,7 @@ export declare type ConfirmBidCreateBidderPositionMutationResponse = {
                 }) | null;
             }) | null;
             readonly status: string;
-            readonly message_header: string | null;
-            readonly message_description_md: string | null;
+            readonly messageHeader: string | null;
         }) | null;
     }) | null;
 };

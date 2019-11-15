@@ -30,8 +30,7 @@ mutation ConfirmBidCreateBidderPositionMutation(
         __id
       }
       status
-      message_header
-      message_description_md
+      messageHeader: message_header
     }
   }
 }
@@ -122,14 +121,8 @@ var node = function () {
         "storageKey": null
       }, {
         "kind": "ScalarField",
-        "alias": null,
+        "alias": "messageHeader",
         "name": "message_header",
-        "args": null,
-        "storageKey": null
-      }, {
-        "kind": "ScalarField",
-        "alias": null,
-        "name": "message_description_md",
         "args": null,
         "storageKey": null
       }]
@@ -140,7 +133,7 @@ var node = function () {
     "operationKind": "mutation",
     "name": "ConfirmBidCreateBidderPositionMutation",
     "id": null,
-    "text": "mutation ConfirmBidCreateBidderPositionMutation(\n  $input: BidderPositionInput!\n) {\n  createBidderPosition(input: $input) {\n    result {\n      position {\n        id\n        sale_artwork {\n          sale {\n            registrationStatus {\n              id\n              __id\n            }\n            __id\n          }\n          __id\n        }\n        __id\n      }\n      status\n      message_header\n      message_description_md\n    }\n  }\n}\n",
+    "text": "mutation ConfirmBidCreateBidderPositionMutation(\n  $input: BidderPositionInput!\n) {\n  createBidderPosition(input: $input) {\n    result {\n      position {\n        id\n        sale_artwork {\n          sale {\n            registrationStatus {\n              id\n              __id\n            }\n            __id\n          }\n          __id\n        }\n        __id\n      }\n      status\n      messageHeader: message_header\n    }\n  }\n}\n",
     "metadata": {},
     "fragment": {
       "kind": "Fragment",
@@ -159,7 +152,7 @@ var node = function () {
   };
 }();
 
-node.hash = '5302f9a91840d5cc3e0dad780fbcba5e';
+node.hash = '4717cf31f235967d3d66738c0b632bc5';
 var _default = node;
 exports.default = _default;
 //# sourceMappingURL=ConfirmBidCreateBidderPositionMutation.graphql.js.map

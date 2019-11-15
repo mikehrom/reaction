@@ -5,7 +5,7 @@ require("core-js/modules/es6.object.define-property");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.confirmBidBidderPositionQueryWithPending = exports.confirmBidBidderPositionQueryWithWinning = exports.createBidderPositionFailed = exports.createBidderPositionSuccessfulAndBidder = exports.createBidderPositionSuccessful = void 0;
+exports.confirmBidBidderPositionQueryWithOutbid = exports.confirmBidBidderPositionQueryWithPending = exports.confirmBidBidderPositionQueryWithWinning = exports.createBidderPositionFailed = exports.createBidderPositionSuccessfulAndBidder = exports.createBidderPositionSuccessful = void 0;
 var createBidderPositionSuccessful = {
   createBidderPosition: {
     result: {
@@ -20,8 +20,7 @@ var createBidderPositionSuccessful = {
         }
       },
       status: "SUCCESS",
-      message_header: null,
-      message_description_md: null
+      messageHeader: null
     }
   }
 };
@@ -40,8 +39,7 @@ var createBidderPositionSuccessfulAndBidder = {
         }
       },
       status: "SUCCESS",
-      message_header: null,
-      message_description_md: null
+      messageHeader: null
     }
   }
 };
@@ -51,8 +49,7 @@ var createBidderPositionFailed = {
     result: {
       position: null,
       status: "FAILED",
-      message_header: "The `createBidderPosition` mutation failed.",
-      message_description_md: null
+      messageHeader: "Sale Closed to Bids"
     }
   }
 };
@@ -83,4 +80,17 @@ var confirmBidBidderPositionQueryWithPending = {
   }
 };
 exports.confirmBidBidderPositionQueryWithPending = confirmBidBidderPositionQueryWithPending;
+var confirmBidBidderPositionQueryWithOutbid = {
+  me: {
+    bidderPosition: {
+      status: "OUTBID",
+      messageHeader: "Your bid wasn’t high enough",
+      position: {
+        id: "pending-bidder-position-id-from-polling",
+        suggestedNextBid: null
+      }
+    }
+  }
+};
+exports.confirmBidBidderPositionQueryWithOutbid = confirmBidBidderPositionQueryWithOutbid;
 //# sourceMappingURL=createBidderPosition.js.map
