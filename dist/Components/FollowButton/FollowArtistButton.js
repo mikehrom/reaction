@@ -108,12 +108,12 @@ function (_React$Component) {
       if (user && user.id) {
         _this.followArtistForUser(user);
       } else if (onOpenAuthModal) {
-        var config = {
+        var _config = {
           contextModule: "intext tooltip",
           intent: "follow artist",
           copy: "Sign up to follow artists"
         };
-        onOpenAuthModal("register", config);
+        onOpenAuthModal("register", _config);
       }
     });
 

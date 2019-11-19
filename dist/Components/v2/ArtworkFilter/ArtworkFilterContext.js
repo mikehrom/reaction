@@ -194,39 +194,39 @@ var artworkFilterReducer = function artworkFilterReducer(state, action) {
         var _action$payload = action.payload,
             _name = _action$payload.name,
             _value = _action$payload.value;
-        var filterState = {};
+        var _filterState = {};
 
         if (_name === "attribution_class") {
-          filterState = {
+          _filterState = {
             attribution_class: state.filters.attribution_class.concat(_value)
           };
         }
 
         if (_name === "major_periods") {
-          filterState = {
+          _filterState = {
             major_periods: _value ? [_value] : []
           };
         }
 
         if (_name === "page") {
-          filterState[_name] = Number(_value);
+          _filterState[_name] = Number(_value);
         } // String filter types
 
 
         ;
         ["color", "height", "medium", "partner_id", "price_range", "sort", "width"].forEach(function (filter) {
           if (_name === filter) {
-            filterState[_name] = _value;
+            _filterState[_name] = _value;
           }
         }) // Boolean filter types
         ;
         ["acquireable", "at_auction", "for_sale", "inquireable_only", "offerable"].forEach(function (filter) {
           if (_name === filter) {
-            filterState[_name] = Boolean(_value);
+            _filterState[_name] = Boolean(_value);
           }
         });
         delete state.reset;
-        return _objectSpread({}, state, filterState);
+        return _objectSpread({}, state, _filterState);
       }
 
     /**
@@ -236,28 +236,28 @@ var artworkFilterReducer = function artworkFilterReducer(state, action) {
     case "UNSET":
       {
         var _name2 = action.payload.name;
-        var _filterState = {};
+        var _filterState2 = {};
 
         if (_name2 === "attribution_class") {
-          _filterState = {
+          _filterState2 = {
             attribution_class: []
           };
         }
 
         if (_name2 === "major_periods") {
-          _filterState = {
+          _filterState2 = {
             major_periods: []
           };
         }
 
         if (_name2 === "medium") {
-          _filterState = {
+          _filterState2 = {
             medium: "*"
           };
         }
 
         if (_name2 === "page") {
-          _filterState = {
+          _filterState2 = {
             page: 1
           };
         }
@@ -265,10 +265,10 @@ var artworkFilterReducer = function artworkFilterReducer(state, action) {
         ;
         ["acquireable", "at_auction", "color", "for_sale", "inquireable_only", "offerable", "partner_id"].forEach(function (filter) {
           if (_name2 === filter) {
-            _filterState[_name2] = null;
+            _filterState2[_name2] = null;
           }
         });
-        return _objectSpread({}, state, _filterState);
+        return _objectSpread({}, state, _filterState2);
       }
 
     /**

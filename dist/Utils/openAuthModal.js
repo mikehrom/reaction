@@ -26,17 +26,17 @@ var openAuthModal = function openAuthModal(mediator, reason) {
   var handled = false;
 
   if (_sharify.data.IS_MOBILE) {
-    var _intent = getMobileAuthIntent(reason);
+    var intent = getMobileAuthIntent(reason);
 
-    if (_intent) {
-      openMobileAuth(_intent);
+    if (intent) {
+      openMobileAuth(intent);
       handled = true;
     }
   } else if (mediator) {
-    var _intent2 = getDesktopAuthIntent(reason);
+    var _intent = getDesktopAuthIntent(reason);
 
-    if (_intent2) {
-      openDesktopAuth(mediator, _intent2);
+    if (_intent) {
+      openDesktopAuth(mediator, _intent);
       handled = true;
     }
   }

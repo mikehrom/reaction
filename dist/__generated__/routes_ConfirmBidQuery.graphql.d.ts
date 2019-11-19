@@ -1,6 +1,6 @@
 import { ConcreteRequest } from "relay-runtime";
-import { BidForm_me$ref } from "./BidForm_me.graphql";
 import { BidForm_saleArtwork$ref } from "./BidForm_saleArtwork.graphql";
+import { ConfirmBid_me$ref } from "./ConfirmBid_me.graphql";
 import { LotInfo_artwork$ref } from "./LotInfo_artwork.graphql";
 import { LotInfo_saleArtwork$ref } from "./LotInfo_saleArtwork.graphql";
 export declare type routes_ConfirmBidQueryVariables = {
@@ -30,9 +30,8 @@ export declare type routes_ConfirmBidQueryResponse = {
         readonly " $fragmentRefs": LotInfo_artwork$ref;
     }) | null;
     readonly me: ({
-        readonly id: string;
         readonly has_qualified_credit_cards: boolean | null;
-        readonly " $fragmentRefs": BidForm_me$ref;
+        readonly " $fragmentRefs": ConfirmBid_me$ref;
     }) | null;
 };
 export declare type routes_ConfirmBidQuery = {

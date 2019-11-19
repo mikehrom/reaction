@@ -228,13 +228,13 @@ function (_React$Component) {
 
       if (this.state.caughtError) {
         var _this$state$caughtErr = this.state.caughtError,
-            _error = _this$state$caughtErr.error,
-            _errorInfo = _this$state$caughtErr.errorInfo;
+            error = _this$state$caughtErr.error,
+            errorInfo = _this$state$caughtErr.errorInfo;
         console.error({
-          error: _error,
-          errorInfo: _errorInfo
+          error: error,
+          errorInfo: errorInfo
         });
-        return "Error occurred while rendering Relay component: ".concat(_error);
+        return "Error occurred while rendering Relay component: ".concat(error);
       }
 
       var _this$props2 = this.props,

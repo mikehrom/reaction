@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.createCreditCardAndUpdatePhone = createCreditCardAndUpdatePhone;
 exports.RegisterRouteFragmentContainer = exports.RegisterRoute = void 0;
 
 require("core-js/modules/es6.array.for-each");
@@ -53,15 +54,75 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 var logger = (0, _logger.default)("Apps/Auction/Routes/Register");
+
+// TODO: Extract.
+function createCreditCardAndUpdatePhone(relayEnvironment, phone, token) {
+  return new Promise(
+  /*#__PURE__*/
+  function () {
+    var _ref = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee(resolve, reject) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              (0, _reactRelay.commitMutation)(relayEnvironment, {
+                onCompleted: function onCompleted(data, errors) {
+                  var creditCardOrError = data.createCreditCard.creditCardOrError;
+
+                  if (creditCardOrError.creditCardEdge) {
+                    resolve();
+                  } else {
+                    if (errors) {
+                      reject(errors);
+                    } else {
+                      reject(creditCardOrError.mutationError);
+                    }
+                  }
+                },
+                onError: reject,
+                mutation: _graphql || (_graphql = function _graphql() {
+                  var node = require("../../../../__generated__/RegisterCreateCreditCardAndUpdatePhoneMutation.graphql");
+
+                  if (node.hash && node.hash !== "00a2498f3a22aea39c5d39bdcb14aaee") {
+                    console.error("The definition of 'RegisterCreateCreditCardAndUpdatePhoneMutation' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
+                  }
+
+                  return require("../../../../__generated__/RegisterCreateCreditCardAndUpdatePhoneMutation.graphql");
+                }),
+                variables: {
+                  creditCardInput: {
+                    token: token
+                  },
+                  profileInput: {
+                    phone: phone
+                  }
+                }
+              });
+
+            case 1:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x, _x2) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+}
 
 var RegisterRoute = function RegisterRoute(props) {
   var me = props.me,
@@ -93,12 +154,12 @@ var RegisterRoute = function RegisterRoute(props) {
     return new Promise(
     /*#__PURE__*/
     function () {
-      var _ref = _asyncToGenerator(
+      var _ref2 = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(resolve, reject) {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      regeneratorRuntime.mark(function _callee2(resolve, reject) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 (0, _reactRelay.commitMutation)(relay.environment, {
                   onCompleted: function onCompleted(data) {
@@ -107,7 +168,7 @@ var RegisterRoute = function RegisterRoute(props) {
                   onError: function onError(error) {
                     reject(error);
                   },
-                  mutation: _graphql || (_graphql = function _graphql() {
+                  mutation: _graphql2 || (_graphql2 = function _graphql2() {
                     var node = require("../../../../__generated__/RegisterCreateBidderMutation.graphql");
 
                     if (node.hash && node.hash !== "2026ef93ec0debedc112e1d8b4ba9c6b") {
@@ -119,65 +180,6 @@ var RegisterRoute = function RegisterRoute(props) {
                   variables: {
                     input: {
                       sale_id: sale.id
-                    }
-                  }
-                });
-
-              case 1:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }));
-
-      return function (_x, _x2) {
-        return _ref.apply(this, arguments);
-      };
-    }());
-  }
-
-  function createCreditCardAndUpdatePhone(phone, token) {
-    return new Promise(
-    /*#__PURE__*/
-    function () {
-      var _ref2 = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2(resolve, reject) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                (0, _reactRelay.commitMutation)(relay.environment, {
-                  onCompleted: function onCompleted(data, errors) {
-                    var creditCardOrError = data.createCreditCard.creditCardOrError;
-
-                    if (creditCardOrError.creditCardEdge) {
-                      resolve();
-                    } else {
-                      if (errors) {
-                        reject(errors);
-                      } else {
-                        reject(creditCardOrError.mutationError);
-                      }
-                    }
-                  },
-                  onError: reject,
-                  mutation: _graphql2 || (_graphql2 = function _graphql2() {
-                    var node = require("../../../../__generated__/RegisterCreateCreditCardAndUpdatePhoneMutation.graphql");
-
-                    if (node.hash && node.hash !== "00a2498f3a22aea39c5d39bdcb14aaee") {
-                      console.error("The definition of 'RegisterCreateCreditCardAndUpdatePhoneMutation' appears to have changed. Run `relay-compiler` to update the generated files to receive the expected data.");
-                    }
-
-                    return require("../../../../__generated__/RegisterCreateCreditCardAndUpdatePhoneMutation.graphql");
-                  }),
-                  variables: {
-                    creditCardInput: {
-                      token: token
-                    },
-                    profileInput: {
-                      phone: phone
                     }
                   }
                 });
@@ -216,7 +218,7 @@ var RegisterRoute = function RegisterRoute(props) {
   }
 
   function handleSubmit(actions, result) {
-    createCreditCardAndUpdatePhone(result.phoneNumber, result.token.id).then(function () {
+    createCreditCardAndUpdatePhone(relay.environment, result.phoneNumber, result.token.id).then(function () {
       createBidder().then(function (data) {
         trackRegistrationSuccess(data.createBidder.bidder.id);
         window.location.assign("".concat(_sharify.data.APP_URL, "/auction/").concat(sale.id, "/confirm-registration"));

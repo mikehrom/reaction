@@ -23,10 +23,6 @@ require("core-js/modules/web.dom.iterable");
 
 require("core-js/modules/es6.array.is-array");
 
-require("core-js/modules/es6.regexp.to-string");
-
-require("core-js/modules/es6.date.to-string");
-
 var _isString2 = _interopRequireDefault(require("lodash/isString"));
 
 var _isFunction2 = _interopRequireDefault(require("lodash/isFunction"));
@@ -71,7 +67,7 @@ var NavItem = function NavItem(_ref) {
       _ref$display = _ref.display,
       display = _ref$display === void 0 ? "block" : _ref$display,
       href = _ref.href,
-      onClick = _ref.onClick;
+      _onClick = _ref.onClick;
   var navItemLabel = children;
 
   var _useTracking = (0, _useTracking2.useTracking)(),
@@ -147,20 +143,10 @@ var NavItem = function NavItem(_ref) {
     style: {
       cursor: "pointer"
     },
-    onClick: function (_onClick) {
-      function onClick() {
-        return _onClick.apply(this, arguments);
-      }
-
-      onClick.toString = function () {
-        return _onClick.toString();
-      };
-
-      return onClick;
-    }(function () {
+    onClick: function onClick() {
       trackClick();
-      onClick && onClick();
-    })
+      _onClick && _onClick();
+    }
   }, _react.default.createElement(_palette.Sans, {
     size: "3",
     weight: "medium",

@@ -27,6 +27,8 @@ require("core-js/modules/es6.array.iterator");
 
 var _palette = require("@artsy/palette");
 
+var _CreditCardInstructions = require("./CreditCardInstructions");
+
 var _AddressForm = require("../../Order/Components/AddressForm");
 
 var _CreditCardInput = require("../../Order/Components/CreditCardInput");
@@ -167,8 +169,10 @@ var OnSubmitValidationError = function OnSubmitValidationError(props) {
       var clonedErrors = Object.assign({}, formikProps.errors);
       var addressErrors = clonedErrors.address;
       delete clonedErrors.address;
-      var errors = Object.assign({}, clonedErrors, addressErrors);
-      cb(Object.values(errors));
+
+      var _errors = Object.assign({}, clonedErrors, addressErrors);
+
+      cb(Object.values(_errors));
       formikProps.setSubmitting(false);
     }
   };
@@ -215,25 +219,18 @@ var RegistrationForm = function RegistrationForm(props) {
         setFieldError("creditCard", error.message);
         setSubmitting(false);
       } else {
-        var result = {
+        var _result = {
           phoneNumber: values.address.phoneNumber,
           token: token
         };
-        props.onSubmit(actions, result);
+        props.onSubmit(actions, _result);
       }
     });
   }
 
   return _react.default.createElement(_palette.Box, {
     maxWidth: 550
-  }, _react.default.createElement(_palette.Serif, {
-    size: "4",
-    color: "black100"
-  }, "Please enter your credit card information below. The name on your Artsy account must match the name on the card, and a valid credit card is required in order to bid."), _react.default.createElement(_palette.Serif, {
-    size: "4",
-    mt: 2,
-    color: "black100"
-  }, "Registration is free. Artsy will never charge this card without your permission, and you are not required to use this card to pay if you win."), _react.default.createElement(_palette.Box, {
+  }, _react.default.createElement(_CreditCardInstructions.CreditCardInstructions, null), _react.default.createElement(_palette.Box, {
     mt: 2
   }, _react.default.createElement(_formik.Formik, {
     initialValues: initialValues,

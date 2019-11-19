@@ -122,12 +122,11 @@ function (_React$Component) {
       var _this2 = this;
 
       if (this.props.onLoadMore) {
-        var _interval = setInterval(function () {
+        var interval = setInterval(function () {
           _this2.maybeLoadMore();
         }, 150);
-
         this.setState({
-          interval: _interval
+          interval: interval
         });
       }
     }

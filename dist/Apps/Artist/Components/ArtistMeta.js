@@ -64,15 +64,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var sellerFromPartner = function sellerFromPartner(partner) {
   if (partner) {
     var profile = partner.profile;
-
-    var _image = imageObjectAttributes(profile);
-
+    var image = imageObjectAttributes(profile);
     return {
       "@context": "http://schema.org",
       "@type": "ArtGallery",
       name: partner.name,
       url: "".concat(_sharify.data.APP_URL).concat(partner.href),
-      image: _image
+      image: image
     };
   }
 };

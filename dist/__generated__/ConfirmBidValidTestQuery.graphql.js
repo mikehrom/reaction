@@ -38,9 +38,8 @@ query ConfirmBidValidTestQuery {
     __id
   }
   me {
-    ...BidForm_me
     id
-    has_qualified_credit_cards
+    ...ConfirmBid_me
     __id
   }
 }
@@ -82,6 +81,13 @@ fragment BidForm_saleArtwork on SaleArtwork {
     }
     __id
   }
+  __id
+}
+
+fragment ConfirmBid_me on Me {
+  id
+  hasQualifiedCreditCards: has_qualified_credit_cards
+  ...BidForm_me
   __id
 }
 
@@ -155,18 +161,11 @@ var node = function () {
       v9 = {
     "kind": "ScalarField",
     "alias": null,
-    "name": "has_qualified_credit_cards",
-    "args": null,
-    "storageKey": null
-  },
-      v10 = {
-    "kind": "ScalarField",
-    "alias": null,
     "name": "cents",
     "args": null,
     "storageKey": null
   },
-      v11 = {
+      v10 = {
     "kind": "ScalarField",
     "alias": null,
     "name": "display",
@@ -178,7 +177,7 @@ var node = function () {
     "operationKind": "query",
     "name": "ConfirmBidValidTestQuery",
     "id": null,
-    "text": "query ConfirmBidValidTestQuery {\n  artwork(id: \"artwork-id\") {\n    ...LotInfo_artwork\n    _id\n    id\n    saleArtwork: sale_artwork(sale_id: \"example-auction-id\") {\n      ...LotInfo_saleArtwork\n      ...BidForm_saleArtwork\n      _id\n      id\n      sale {\n        registrationStatus {\n          id\n          qualified_for_bidding\n          __id\n        }\n        _id\n        id\n        name\n        is_closed\n        is_registration_closed\n        __id\n      }\n      __id\n    }\n    __id\n  }\n  me {\n    ...BidForm_me\n    id\n    has_qualified_credit_cards\n    __id\n  }\n}\n\nfragment LotInfo_artwork on Artwork {\n  _id\n  date\n  title\n  imageUrl\n  artistNames: artist_names\n  __id\n}\n\nfragment LotInfo_saleArtwork on SaleArtwork {\n  counts {\n    bidderPositions: bidder_positions\n  }\n  lotLabel: lot_label\n  minimumNextBid: minimum_next_bid {\n    amount\n    cents\n    display\n  }\n  __id\n}\n\nfragment BidForm_saleArtwork on SaleArtwork {\n  minimumNextBid: minimum_next_bid {\n    cents\n  }\n  increments(useMyMaxBid: true) {\n    cents\n    display\n  }\n  sale {\n    registrationStatus {\n      qualifiedForBidding: qualified_for_bidding\n      __id\n    }\n    __id\n  }\n  __id\n}\n\nfragment BidForm_me on Me {\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  __id\n}\n",
+    "text": "query ConfirmBidValidTestQuery {\n  artwork(id: \"artwork-id\") {\n    ...LotInfo_artwork\n    _id\n    id\n    saleArtwork: sale_artwork(sale_id: \"example-auction-id\") {\n      ...LotInfo_saleArtwork\n      ...BidForm_saleArtwork\n      _id\n      id\n      sale {\n        registrationStatus {\n          id\n          qualified_for_bidding\n          __id\n        }\n        _id\n        id\n        name\n        is_closed\n        is_registration_closed\n        __id\n      }\n      __id\n    }\n    __id\n  }\n  me {\n    id\n    ...ConfirmBid_me\n    __id\n  }\n}\n\nfragment LotInfo_artwork on Artwork {\n  _id\n  date\n  title\n  imageUrl\n  artistNames: artist_names\n  __id\n}\n\nfragment LotInfo_saleArtwork on SaleArtwork {\n  counts {\n    bidderPositions: bidder_positions\n  }\n  lotLabel: lot_label\n  minimumNextBid: minimum_next_bid {\n    amount\n    cents\n    display\n  }\n  __id\n}\n\nfragment BidForm_saleArtwork on SaleArtwork {\n  minimumNextBid: minimum_next_bid {\n    cents\n  }\n  increments(useMyMaxBid: true) {\n    cents\n    display\n  }\n  sale {\n    registrationStatus {\n      qualifiedForBidding: qualified_for_bidding\n      __id\n    }\n    __id\n  }\n  __id\n}\n\nfragment ConfirmBid_me on Me {\n  id\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  ...BidForm_me\n  __id\n}\n\nfragment BidForm_me on Me {\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  __id\n}\n",
     "metadata": {},
     "fragment": {
       "kind": "Fragment",
@@ -242,11 +241,11 @@ var node = function () {
         "args": null,
         "concreteType": "Me",
         "plural": false,
-        "selections": [{
+        "selections": [v2, {
           "kind": "FragmentSpread",
-          "name": "BidForm_me",
+          "name": "ConfirmBid_me",
           "args": null
-        }, v2, v9, v5]
+        }, v5]
       }]
     },
     "operation": {
@@ -328,7 +327,7 @@ var node = function () {
               "name": "amount",
               "args": null,
               "storageKey": null
-            }, v10, v11]
+            }, v9, v10]
           }, v5, {
             "kind": "LinkedField",
             "alias": null,
@@ -342,7 +341,7 @@ var node = function () {
             }],
             "concreteType": "BidIncrementsFormatted",
             "plural": true,
-            "selections": [v10, v11]
+            "selections": [v9, v10]
           }, {
             "kind": "LinkedField",
             "alias": null,
@@ -377,19 +376,19 @@ var node = function () {
         "args": null,
         "concreteType": "Me",
         "plural": false,
-        "selections": [{
+        "selections": [v2, {
           "kind": "ScalarField",
           "alias": "hasQualifiedCreditCards",
           "name": "has_qualified_credit_cards",
           "args": null,
           "storageKey": null
-        }, v5, v2, v9]
+        }, v5]
       }]
     }
   };
 }();
 
-node.hash = 'ad6e68f098a2b2396f392475bbf96e5e';
+node.hash = '6b7c8ac1bbc520f7ead854f71bdb77a2';
 var _default = node;
 exports.default = _default;
 //# sourceMappingURL=ConfirmBidValidTestQuery.graphql.js.map

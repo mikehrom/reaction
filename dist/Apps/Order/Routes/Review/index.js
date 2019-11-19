@@ -317,8 +317,7 @@ function (_Component) {
       var _handleSubmitError = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2(error) {
-        var artistId, parsedData, _data;
-
+        var artistId, parsedData, data;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -360,13 +359,13 @@ function (_Component) {
                 return _context2.abrupt("break", 34);
 
               case 14:
-                _data = {};
+                data = {};
 
                 if (error.data) {
-                  _data = JSON.parse(error.data);
+                  data = JSON.parse(error.data);
                 }
 
-                if (!(_data.decline_code === "insufficient_funds")) {
+                if (!(data.decline_code === "insufficient_funds")) {
                   _context2.next = 21;
                   break;
                 }

@@ -10,8 +10,10 @@ exports.ConfirmBidQueryResponseFixture = void 0;
 var ConfirmBidQueryResponseFixture = {
   me: {
     id: "my-user-id",
+    hasQualifiedCreditCards: true,
     has_qualified_credit_cards: true,
-    " $fragmentRefs": null
+    " $fragmentRefs": null,
+    " $refType": null
   },
   artwork: {
     " $fragmentRefs": null,

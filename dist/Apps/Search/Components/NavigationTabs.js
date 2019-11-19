@@ -138,23 +138,21 @@ function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "renderTab", function (text, to) {
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      return function () {
-        var exact = options.exact,
-            count = options.count;
-        var tabName = text.replace(/[0-9]/g, "").trim();
-        return _react.default.createElement(_v.RouteTab, {
-          to: to,
-          exact: exact,
-          onClick: function onClick() {
-            _this.trackClick(tabName, to);
-          },
-          key: to
-        }, _react.default.createElement(_palette.Flex, null, text, count != null && _react.default.createElement(_palette.Sans, {
-          ml: 0.5,
-          size: "3t",
-          weight: "regular"
-        }, "(", count, ")")));
-      }();
+      var exact = options.exact,
+          count = options.count;
+      var tabName = text.replace(/[0-9]/g, "").trim();
+      return _react.default.createElement(_v.RouteTab, {
+        to: to,
+        exact: exact,
+        onClick: function onClick() {
+          _this.trackClick(tabName, to);
+        },
+        key: to
+      }, _react.default.createElement(_palette.Flex, null, text, count != null && _react.default.createElement(_palette.Sans, {
+        ml: 0.5,
+        size: "3t",
+        weight: "regular"
+      }, "(", count, ")")));
     });
 
     return _this;

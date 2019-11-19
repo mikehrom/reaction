@@ -41,8 +41,7 @@ query routes_ConfirmBidQuery(
     __id
   }
   me {
-    ...BidForm_me
-    id
+    ...ConfirmBid_me
     has_qualified_credit_cards
     __id
   }
@@ -85,6 +84,13 @@ fragment BidForm_saleArtwork on SaleArtwork {
     }
     __id
   }
+  __id
+}
+
+fragment ConfirmBid_me on Me {
+  id
+  hasQualifiedCreditCards: has_qualified_credit_cards
+  ...BidForm_me
   __id
 }
 
@@ -192,7 +198,7 @@ var node = function () {
     "operationKind": "query",
     "name": "routes_ConfirmBidQuery",
     "id": null,
-    "text": "query routes_ConfirmBidQuery(\n  $saleID: String!\n  $artworkID: String!\n) {\n  artwork(id: $artworkID) {\n    ...LotInfo_artwork\n    _id\n    id\n    saleArtwork: sale_artwork(sale_id: $saleID) {\n      ...LotInfo_saleArtwork\n      ...BidForm_saleArtwork\n      _id\n      id\n      sale {\n        registrationStatus {\n          id\n          qualified_for_bidding\n          __id\n        }\n        _id\n        id\n        name\n        is_closed\n        is_registration_closed\n        __id\n      }\n      __id\n    }\n    __id\n  }\n  me {\n    ...BidForm_me\n    id\n    has_qualified_credit_cards\n    __id\n  }\n}\n\nfragment LotInfo_artwork on Artwork {\n  _id\n  date\n  title\n  imageUrl\n  artistNames: artist_names\n  __id\n}\n\nfragment LotInfo_saleArtwork on SaleArtwork {\n  counts {\n    bidderPositions: bidder_positions\n  }\n  lotLabel: lot_label\n  minimumNextBid: minimum_next_bid {\n    amount\n    cents\n    display\n  }\n  __id\n}\n\nfragment BidForm_saleArtwork on SaleArtwork {\n  minimumNextBid: minimum_next_bid {\n    cents\n  }\n  increments(useMyMaxBid: true) {\n    cents\n    display\n  }\n  sale {\n    registrationStatus {\n      qualifiedForBidding: qualified_for_bidding\n      __id\n    }\n    __id\n  }\n  __id\n}\n\nfragment BidForm_me on Me {\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  __id\n}\n",
+    "text": "query routes_ConfirmBidQuery(\n  $saleID: String!\n  $artworkID: String!\n) {\n  artwork(id: $artworkID) {\n    ...LotInfo_artwork\n    _id\n    id\n    saleArtwork: sale_artwork(sale_id: $saleID) {\n      ...LotInfo_saleArtwork\n      ...BidForm_saleArtwork\n      _id\n      id\n      sale {\n        registrationStatus {\n          id\n          qualified_for_bidding\n          __id\n        }\n        _id\n        id\n        name\n        is_closed\n        is_registration_closed\n        __id\n      }\n      __id\n    }\n    __id\n  }\n  me {\n    ...ConfirmBid_me\n    has_qualified_credit_cards\n    __id\n  }\n}\n\nfragment LotInfo_artwork on Artwork {\n  _id\n  date\n  title\n  imageUrl\n  artistNames: artist_names\n  __id\n}\n\nfragment LotInfo_saleArtwork on SaleArtwork {\n  counts {\n    bidderPositions: bidder_positions\n  }\n  lotLabel: lot_label\n  minimumNextBid: minimum_next_bid {\n    amount\n    cents\n    display\n  }\n  __id\n}\n\nfragment BidForm_saleArtwork on SaleArtwork {\n  minimumNextBid: minimum_next_bid {\n    cents\n  }\n  increments(useMyMaxBid: true) {\n    cents\n    display\n  }\n  sale {\n    registrationStatus {\n      qualifiedForBidding: qualified_for_bidding\n      __id\n    }\n    __id\n  }\n  __id\n}\n\nfragment ConfirmBid_me on Me {\n  id\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  ...BidForm_me\n  __id\n}\n\nfragment BidForm_me on Me {\n  hasQualifiedCreditCards: has_qualified_credit_cards\n  __id\n}\n",
     "metadata": {},
     "fragment": {
       "kind": "Fragment",
@@ -258,9 +264,9 @@ var node = function () {
         "plural": false,
         "selections": [{
           "kind": "FragmentSpread",
-          "name": "BidForm_me",
+          "name": "ConfirmBid_me",
           "args": null
-        }, v3, v10, v6]
+        }, v10, v6]
       }]
     },
     "operation": {
@@ -391,19 +397,19 @@ var node = function () {
         "args": null,
         "concreteType": "Me",
         "plural": false,
-        "selections": [{
+        "selections": [v3, {
           "kind": "ScalarField",
           "alias": "hasQualifiedCreditCards",
           "name": "has_qualified_credit_cards",
           "args": null,
           "storageKey": null
-        }, v6, v3, v10]
+        }, v6, v10]
       }]
     }
   };
 }();
 
-node.hash = 'd98d9bac49c62c2b73eec0cba15eb1c7';
+node.hash = '3bf3d8492b0a9d727ae41b71a8b75416';
 var _default = node;
 exports.default = _default;
 //# sourceMappingURL=routes_ConfirmBidQuery.graphql.js.map

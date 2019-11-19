@@ -60,7 +60,7 @@ function buildClientApp(config) {
     var _ref = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(resolve, reject) {
-      var _config$context, context, _config$history, history, _config$initialRoute, initialRoute, _config$routes, routes, user, relayEnvironment, getHistoryProtocol, historyMiddlewares, resolver, Renderer, Router, _ClientApp;
+      var _config$context, context, _config$history, history, _config$initialRoute, initialRoute, _config$routes, routes, user, relayEnvironment, getHistoryProtocol, historyMiddlewares, resolver, Renderer, Router, ClientApp;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -120,7 +120,7 @@ function buildClientApp(config) {
             case 10:
               Router = _context.sent;
 
-              _ClientApp = function _ClientApp() {
+              ClientApp = function ClientApp() {
                 return _react.default.createElement(_Boot.Boot, {
                   context: context,
                   user: user,
@@ -132,7 +132,7 @@ function buildClientApp(config) {
               };
 
               resolve({
-                ClientApp: _ClientApp
+                ClientApp: ClientApp
               });
               _context.next = 19;
               break;

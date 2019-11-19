@@ -5,7 +5,7 @@ require("core-js/modules/es6.object.define-property");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BidFormFragmentContainer = exports.BidForm = void 0;
+exports.BidFormFragmentContainer = exports.BidForm = exports.determineDisplayRequirements = void 0;
 
 require("core-js/modules/es6.object.assign");
 
@@ -20,6 +20,8 @@ require("core-js/modules/es6.date.to-string");
 require("core-js/modules/es6.array.map");
 
 require("core-js/modules/es6.number.constructor");
+
+require("core-js/modules/es6.string.trim");
 
 var _find2 = _interopRequireDefault(require("lodash/find"));
 
@@ -39,9 +41,23 @@ var _reactRelay = require("react-relay");
 
 var _yup = _interopRequireDefault(require("yup"));
 
+var _CreditCardInstructions = require("./CreditCardInstructions");
+
+var _AddressForm = require("../../Order/Components/AddressForm");
+
+var _CreditCardInput = require("../../Order/Components/CreditCardInput");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+_yup.default.addMethod(_yup.default.string, "present", function (message) {
+  var _this = this;
+
+  return this.test("test-present", message, function (value) {
+    return _this.trim().required(message).isValid(value);
+  });
+});
 
 var validationSchemaForRegisteredUsers = _yup.default.object().shape({
   selectedBid: _yup.default.string().required()
@@ -49,6 +65,20 @@ var validationSchemaForRegisteredUsers = _yup.default.object().shape({
 
 var validationSchemaForUnregisteredUsersWithCreditCard = _yup.default.object().shape({
   selectedBid: _yup.default.string().required(),
+  agreeToTerms: _yup.default.bool().oneOf([true], "You must agree to the Conditions of Sale")
+});
+
+var validationSchemaForUnregisteredUsersWithoutCreditCard = _yup.default.object().shape({
+  selectedBid: _yup.default.string().required(),
+  address: _yup.default.object({
+    name: _yup.default.string().present("Name is required"),
+    addressLine1: _yup.default.string().present("Address is required"),
+    country: _yup.default.string().present("Country is required"),
+    city: _yup.default.string().present("City is required"),
+    region: _yup.default.string().present("State is required"),
+    postalCode: _yup.default.string().present("Postal code is required"),
+    phoneNumber: _yup.default.string().present("Telephone is required")
+  }),
   agreeToTerms: _yup.default.bool().oneOf([true], "You must agree to the Conditions of Sale")
 });
 
@@ -78,6 +108,8 @@ var determineDisplayRequirements = function determineDisplayRequirements(bidder,
   };
 };
 
+exports.determineDisplayRequirements = determineDisplayRequirements;
+
 var BidForm = function BidForm(_ref2) {
   var initialSelectedBid = _ref2.initialSelectedBid,
       me = _ref2.me,
@@ -99,15 +131,26 @@ var BidForm = function BidForm(_ref2) {
   });
 
   var _determineDisplayRequ = determineDisplayRequirements(saleArtwork.sale.registrationStatus, me),
-      requiresCheckbox = _determineDisplayRequ.requiresCheckbox;
+      requiresCheckbox = _determineDisplayRequ.requiresCheckbox,
+      requiresPaymentInformation = _determineDisplayRequ.requiresPaymentInformation;
 
-  var validationSchema = requiresCheckbox ? validationSchemaForUnregisteredUsersWithCreditCard : validationSchemaForRegisteredUsers;
+  var validationSchema = requiresCheckbox ? requiresPaymentInformation ? validationSchemaForUnregisteredUsersWithoutCreditCard : validationSchemaForUnregisteredUsersWithCreditCard : validationSchemaForRegisteredUsers;
   return _react.default.createElement(_palette.Box, {
     maxWidth: 550
   }, _react.default.createElement(_formik.Formik, {
     initialValues: {
       selectedBid: selectedBid,
-      agreeToTerms: false
+      agreeToTerms: false,
+      address: {
+        name: "",
+        country: "",
+        postalCode: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        region: "",
+        phoneNumber: ""
+      }
     },
     validationSchema: validationSchema,
     onSubmit: onSubmit,
@@ -140,7 +183,30 @@ var BidForm = function BidForm(_ref2) {
         mt: 1,
         color: "red100",
         size: "2"
-      }, errors.selectedBid), showPricingTransparency && _react.default.createElement(_PricingTransparency.PricingTransparency, null)), _react.default.createElement(_palette.Flex, {
+      }, errors.selectedBid), showPricingTransparency && _react.default.createElement(_PricingTransparency.PricingTransparency, null)), requiresPaymentInformation && _react.default.createElement(_palette.Box, null, _react.default.createElement(_palette.Separator, {
+        mb: 3
+      }), _react.default.createElement(_CreditCardInstructions.CreditCardInstructions, null), _react.default.createElement(_palette.Serif, {
+        mt: 4,
+        mb: 2,
+        size: "4t",
+        weight: "semibold",
+        color: "black100"
+      }, "Card Information"), _react.default.createElement(_CreditCardInput.CreditCardInput, {
+        error: {
+          message: errors.creditCard
+        }
+      }), _react.default.createElement(_palette.Box, {
+        mt: 2
+      }, _react.default.createElement(_AddressForm.AddressForm, {
+        value: values.address,
+        onChange: function onChange(address) {
+          return setFieldValue("address", address);
+        },
+        errors: errors.address,
+        touched: touched.address,
+        billing: true,
+        showPhoneNumberInput: true
+      }))), _react.default.createElement(_palette.Flex, {
         pb: 3,
         flexDirection: "column",
         justifyContent: "center",

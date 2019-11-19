@@ -207,13 +207,13 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_this), "setupToolTipPosition", function () {
       if (_this.link) {
-        var _position = (0, _reactDom.findDOMNode)(_this.link).getBoundingClientRect();
+        var position = (0, _reactDom.findDOMNode)(_this.link).getBoundingClientRect();
 
-        var _orientation = _this.getOrientation(_position);
+        var orientation = _this.getOrientation(position);
 
         _this.setState({
-          position: _position,
-          orientation: _orientation
+          position: position,
+          orientation: orientation
         });
       }
     });

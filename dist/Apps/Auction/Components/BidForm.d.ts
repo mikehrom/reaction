@@ -2,6 +2,7 @@ import { BidForm_me } from "__generated__/BidForm_me.graphql";
 import { BidForm_saleArtwork } from "__generated__/BidForm_saleArtwork.graphql";
 import { FormikActions, FormikValues } from "formik";
 import React from "react";
+import { Address } from "Apps/Order/Components/AddressForm";
 interface Props {
     initialSelectedBid?: string;
     me: BidForm_me;
@@ -10,9 +11,17 @@ interface Props {
     showPricingTransparency?: boolean;
 }
 export interface FormValues {
-    selectedBid: string;
+    address?: Address;
     agreeToTerms: boolean;
+    creditCard?: string;
+    selectedBid: string;
 }
+export declare const determineDisplayRequirements: (bidder: {
+    readonly qualifiedForBidding: boolean;
+}, me: BidForm_me) => {
+    requiresCheckbox: boolean;
+    requiresPaymentInformation: boolean;
+};
 export declare const BidForm: React.FC<Props>;
 export declare const BidFormFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<Props, "onSubmit" | "saleArtwork" | "me" | "initialSelectedBid" | "showPricingTransparency">> & import("react-relay").ComponentRef>;
 export {};

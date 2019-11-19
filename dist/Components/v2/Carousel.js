@@ -200,11 +200,11 @@ function (_React$Component2) {
 
     _defineProperty(_assertThisInitialized(_this), "checkLastItemVisible", function () {
       if (_this.flickity && _this.flickity.selectedElements) {
-        var _lastItemVisible = _this.flickity.selectedElements.includes( // FIXME: Undocumented API. Is there a way this can be achieved with
+        var lastItemVisible = _this.flickity.selectedElements.includes( // FIXME: Undocumented API. Is there a way this can be achieved with
         // something public and commonly available?
         _this.flickity.getLastCell().element);
 
-        return _lastItemVisible;
+        return lastItemVisible;
       } else {
         return true;
       }

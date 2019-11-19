@@ -13,10 +13,6 @@ require("core-js/modules/es6.object.keys");
 
 require("core-js/modules/es6.array.reduce");
 
-require("core-js/modules/es6.regexp.to-string");
-
-require("core-js/modules/es6.date.to-string");
-
 require("regenerator-runtime/runtime");
 
 require("core-js/modules/es7.symbol.async-iterator");
@@ -153,7 +149,7 @@ var TestEnv = function TestEnv(opts) {
         mockMutationResults,
         breakpoint,
         _this2$opts,
-        Component,
+        _Component,
         TestPage,
         query,
         defaultData,
@@ -169,7 +165,7 @@ var TestEnv = function TestEnv(opts) {
         switch (_context.prev = _context.next) {
           case 0:
             _ref4 = _args.length > 0 && _args[0] !== undefined ? _args[0] : {}, mockData = _ref4.mockData, mockMutationResults = _ref4.mockMutationResults, breakpoint = _ref4.breakpoint;
-            _this2$opts = _this2.opts, Component = _this2$opts.Component, TestPage = _this2$opts.TestPage, query = _this2$opts.query, defaultData = _this2$opts.defaultData, defaultBreakpoint = _this2$opts.defaultBreakpoint;
+            _this2$opts = _this2.opts, _Component = _this2$opts.Component, TestPage = _this2$opts.TestPage, query = _this2$opts.query, defaultData = _this2$opts.defaultData, defaultBreakpoint = _this2$opts.defaultBreakpoint;
             page = new TestPage();
 
             if (mockMutationResults) {
@@ -200,17 +196,7 @@ var TestEnv = function TestEnv(opts) {
 
             _context.next = 10;
             return (0, _index.renderRelayTree)({
-              Component: function (_Component) {
-                function Component(_x) {
-                  return _Component.apply(this, arguments);
-                }
-
-                Component.toString = function () {
-                  return _Component.toString();
-                };
-
-                return Component;
-              }(function (props) {
+              Component: function Component(props) {
                 // MockBoot overwrites system context, but we want to preserve the
                 // context set higher in the tree by MockQueryRenderer
                 var contextBypass = (0, _react.useContext)(_Artsy.SystemContext);
@@ -219,7 +205,7 @@ var TestEnv = function TestEnv(opts) {
                   headTags: _this2.headTags
                 }, _react.default.createElement(_Artsy.SystemContext.Provider, {
                   value: contextBypass
-                }, _react.default.createElement(Component, _extends({}, props, {
+                }, _react.default.createElement(_Component, _extends({}, props, {
                   router: {
                     push: _this2.routes.mockPushRoute
                   },
@@ -227,7 +213,7 @@ var TestEnv = function TestEnv(opts) {
                     onTransition: _this2.routes.mockOnTransition
                   }
                 })), _react.default.createElement(_Dialogs.ConnectedModalDialog, null)));
-              }),
+              },
               query: query,
               mockNetwork: mockNetwork
             });

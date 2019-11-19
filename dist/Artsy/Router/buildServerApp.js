@@ -75,14 +75,14 @@ function buildServerApp(config) {
     var _ref = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee2(resolve, reject) {
-      var _config$context, context, _config$routes, routes, _url, _userAgent, user, relayEnvironment, historyMiddlewares, resolver, Render, _ref2, _redirect, _status, element, _headTags, matchingMediaQueries, ServerApp, _ref4, _relayData, _styleTags, _bodyHTML, relayData, _scripts, result;
+      var _config$context, context, _config$routes, routes, url, userAgent, user, relayEnvironment, historyMiddlewares, resolver, Render, _ref2, redirect, status, element, headTags, matchingMediaQueries, ServerApp, _ref4, _relayData, styleTags, bodyHTML, relayData, scripts, result;
 
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              _config$context = config.context, context = _config$context === void 0 ? {} : _config$context, _config$routes = config.routes, routes = _config$routes === void 0 ? [] : _config$routes, _url = config.url, _userAgent = config.userAgent;
+              _config$context = config.context, context = _config$context === void 0 ? {} : _config$context, _config$routes = config.routes, routes = _config$routes === void 0 ? [] : _config$routes, url = config.url, userAgent = config.userAgent;
               user = (0, _user.getUser)(context.user);
               relayEnvironment = context.relayEnvironment || (0, _createRelaySSREnvironment.createRelaySSREnvironment)({
                 user: user
@@ -100,7 +100,7 @@ function buildServerApp(config) {
               });
               _context2.next = 9;
               return (0, _trace.trace)("buildServerApp.farceResults", (0, _server2.getFarceResult)({
-                url: _url,
+                url: url,
                 historyMiddlewares: historyMiddlewares,
                 routeConfig: (0, _createRouteConfig.createRouteConfig)(routes),
                 resolver: resolver,
@@ -114,17 +114,17 @@ function buildServerApp(config) {
 
             case 9:
               _ref2 = _context2.sent;
-              _redirect = _ref2.redirect;
-              _status = _ref2.status;
+              redirect = _ref2.redirect;
+              status = _ref2.status;
               element = _ref2.element;
 
-              if (!_redirect) {
+              if (!redirect) {
                 _context2.next = 16;
                 break;
               }
 
               resolve({
-                redirect: _redirect
+                redirect: redirect
               });
               return _context2.abrupt("return");
 
@@ -133,10 +133,10 @@ function buildServerApp(config) {
                * An array that gets passed to `react-head`'s provider that will collect the header
                * tags that are rendered by the App. `headTags` is _mutated_ when it's passed to the App. Beware.
                **/
-              _headTags = [_react.default.createElement("style", {
+              headTags = [_react.default.createElement("style", {
                 type: "text/css"
               }, MediaStyle)];
-              matchingMediaQueries = _userAgent && (0, _matchingMediaQueriesForUserAgent.matchingMediaQueriesForUserAgent)(_userAgent); // prettier-ignore
+              matchingMediaQueries = userAgent && (0, _matchingMediaQueriesForUserAgent.matchingMediaQueriesForUserAgent)(userAgent); // prettier-ignore
 
               ServerApp = function ServerApp(_ref3) {
                 var _ref3$tags = _ref3.tags,
@@ -163,7 +163,7 @@ function buildServerApp(config) {
                         sheet = new _styledComponents.ServerStyleSheet(); // Render tree again, but this time with Relay data being available.
 
                         html = _server.default.renderToString(sheet.collectStyles(_react.default.createElement(ServerApp, {
-                          tags: _headTags
+                          tags: headTags
                         }))); // Get serializable Relay data for rehydration on the client
 
                         _context.next = 4;
@@ -190,21 +190,19 @@ function buildServerApp(config) {
             case 21:
               _ref4 = _context2.sent;
               _relayData = _ref4.relayData;
-              _styleTags = _ref4.styleTags;
-              _bodyHTML = _ref4.bodyHTML;
+              styleTags = _ref4.styleTags;
+              bodyHTML = _ref4.bodyHTML;
               // Strip response of problematic data structures
               relayData = cleanRelayData(_relayData); // Build up script tags to inject into head
 
-              _scripts = [];
-
-              _scripts.push("\n          <script>\n            var __RELAY_BOOTSTRAP__ = ".concat(serializeRelayData(relayData), ";\n          </script>\n        "));
-
+              scripts = [];
+              scripts.push("\n          <script>\n            var __RELAY_BOOTSTRAP__ = ".concat(serializeRelayData(relayData), ";\n          </script>\n        "));
               result = {
-                bodyHTML: _bodyHTML,
-                status: _status,
-                headTags: _headTags,
-                styleTags: _styleTags,
-                scripts: _scripts.join("\n") // Only exporting this for testing purposes, don't go around using this
+                bodyHTML: bodyHTML,
+                status: status,
+                headTags: headTags,
+                styleTags: styleTags,
+                scripts: scripts.join("\n") // Only exporting this for testing purposes, don't go around using this
                 // elsewhere, we’re serious.
 
               };

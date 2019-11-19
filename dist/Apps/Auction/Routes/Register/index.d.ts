@@ -9,6 +9,7 @@ interface RegisterProps {
     relay: RelayProp;
     tracking: TrackingProp;
 }
+export declare function createCreditCardAndUpdatePhone(relayEnvironment: any, phone: any, token: any): Promise<unknown>;
 export declare const RegisterRoute: React.FC<RegisterProps>;
 export declare const RegisterRouteFragmentContainer: React.ComponentType<import("react-relay").MappedFragmentProps<Pick<RegisterProps, "sale" | "tracking" | "me">> & import("react-relay").ComponentRef>;
 export {};
