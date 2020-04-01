@@ -4,6 +4,7 @@ import { LazyLoadComponent } from "react-lazy-load-image-component"
 import { createFragmentContainer, graphql } from "react-relay"
 
 import { ArtworkApp_artwork } from "__generated__/ArtworkApp_artwork.graphql"
+import { ArtworkApp_me } from "__generated__/ArtworkApp_me.graphql"
 import { AppContainer } from "Apps/Components/AppContainer"
 import { HorizontalPadding } from "Apps/Components/HorizontalPadding"
 
@@ -31,6 +32,7 @@ export interface Props {
   tracking?: TrackingProp
   routerPathname: string
   referrer: string
+  me: ArtworkApp_me
 }
 
 declare const window: any
@@ -147,7 +149,7 @@ export class ArtworkApp extends React.Component<Props> {
   }
 
   render() {
-    const { artwork } = this.props
+    const { artwork, me } = this.props
     return (
       <AppContainer>
         <HorizontalPadding>
@@ -166,7 +168,7 @@ export class ArtworkApp extends React.Component<Props> {
             <Row>
               <Col>
                 <ArtworkImageBrowser artwork={artwork} />
-                <ArtworkSidebar artwork={artwork} />
+                <ArtworkSidebar artwork={artwork} me={me} />
                 <ArtworkDetails artwork={artwork} />
                 <PricingContext artwork={artwork} />
                 {this.renderArtists()}
@@ -186,7 +188,7 @@ export class ArtworkApp extends React.Component<Props> {
                 </Box>
               </Col>
               <Col sm={4}>
-                <ArtworkSidebar artwork={artwork} />
+                <ArtworkSidebar artwork={artwork} me={me} />
               </Col>
             </Row>
           </Media>
@@ -293,6 +295,11 @@ export const ArtworkAppFragmentContainer = createFragmentContainer(
         ...ArtworkImageBrowser_artwork
         ...OtherWorks_artwork
         ...PricingContext_artwork
+      }
+    `,
+    me: graphql`
+      fragment ArtworkApp_me on Me {
+        ...ArtworkSidebar_me
       }
     `,
   }
